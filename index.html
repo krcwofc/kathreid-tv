@@ -529,15 +529,19 @@ function onYouTubeIframeAPIReady(){
 
       onReady:(event)=>{
 
-        event.target.mute();
+      event.target.mute();
 
-        renderGuide();
+renderGuide();
 
-        playNext();
+playNext();
 
-        setTimeout(()=>{
-          event.target.playVideo();
-        },500);
+setTimeout(() => {
+
+  try {
+    event.target.playVideo();
+  } catch(e) {}
+
+}, 500);
 
       },
 
@@ -566,23 +570,26 @@ document.body.appendChild(tag);
 
 const overlay = document.getElementById("tapOverlay");
 
-overlay.addEventListener("click",()=>{
+if (overlay) {
 
-  overlay.classList.add("hidden");
+  overlay.addEventListener("click", () => {
 
-  try{
+    overlay.classList.add("hidden");
 
-    player.unMute();
+    try {
 
-    player.playVideo();
+      if (player) {
+        player.unMute();
+        player.playVideo();
+      }
 
-  }catch(err){
+    } catch(err) {
+      console.log(err);
+    }
 
-    console.log(err);
+  });
 
-  }
-
-});
+}
 
 </script>
 
