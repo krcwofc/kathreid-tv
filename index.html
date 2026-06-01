@@ -66,9 +66,31 @@
   }
 
   .player-wrap{
-  position:relative;
-  width:100%;
-  max-width:900px;
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  transition: all 0.4s ease;
+}
+
+/* Sticky full player */
+.player-wrap.sticky{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #0b0b0f;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+/* Mini floating player (mobile feel like YouTube/Twitch) */
+.player-wrap.mini{
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 280px;
+  z-index: 2000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
 }
 
 #tapOverlay{
@@ -590,6 +612,26 @@ if (overlay) {
   });
 
 }
+
+    const playerWrap = document.querySelector(".player-wrap");
+
+window.addEventListener("scroll", () => {
+  const scrollY = window.scrollY;
+
+  if (scrollY > 300 && scrollY < 1200) {
+    // floating mini TV mode
+    playerWrap.classList.add("mini");
+    playerWrap.classList.remove("sticky");
+  } else if (scrollY <= 300) {
+    // normal top TV mode
+    playerWrap.classList.remove("mini");
+    playerWrap.classList.add("sticky");
+  } else {
+    // back to normal flow (bottom of page sections)
+    playerWrap.classList.remove("mini");
+    playerWrap.classList.remove("sticky");
+  }
+});
 
 </script>
 
