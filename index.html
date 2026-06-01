@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>KathReid TV - Hybrid Broadcast Engine</title>
+<title>KathReid TV - 24/7 Hybrid Broadcast</title>
 
 <style>
   body {
@@ -22,6 +22,7 @@
     display: flex;
     justify-content: space-between;
     padding: 12px;
+    box-sizing: border-box;
   }
 
   .logo { font-weight: bold; }
@@ -64,6 +65,7 @@
     aspect-ratio: 16/9;
   }
 
+  /* TV GUIDE */
   .tv-guide {
     width: 100%;
     max-width: 900px;
@@ -105,9 +107,21 @@
     opacity: 0.9;
   }
 
-  .ad-banner {
-    color: #ffcc00;
+  /* DISCORD */
+  .discord-section {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .discord-title {
     font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  iframe {
+    border-radius: 10px;
   }
 </style>
 </head>
@@ -120,32 +134,46 @@
 </div>
 
 <div class="tagline">
-  24/7 KathReid Network — Kathryn Bernardo & James Reid Moments, Music & Films
+  24/7 KathReid Network — Kathryn Bernardo & James Reid Comfort Channel
 </div>
 
 <div class="now-airing" id="nowAiring">Loading broadcast...</div>
 
 <div id="player"></div>
 
+<!-- TV GUIDE -->
 <div class="tv-guide">
   <div class="guide-title">📺 TV GUIDE</div>
   <div class="guide-box" id="guideContent"></div>
 </div>
 
+<!-- DISCORD -->
+<div class="discord-section">
+  <div class="discord-title">💬 ON AIR DISCUSSION</div>
+
+  <iframe
+    src="https://discord.com/widget?id=1510712484531666965&theme=dark"
+    width="320"
+    height="400"
+    frameborder="0"
+    sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+  </iframe>
+</div>
+
 <script>
 /* =========================
-   📺 HYBRID + COMMERCIAL ENGINE
+   🎬 VIDEO ENGINE
 ========================= */
 
-const COMMERCIAL_VIDEO = "YOUR_SOMEONE_SOMEDAY_TRAILER_ID";
+const COMMERCIAL = "t-v8rWA5Kuw";
 
 const schedule = [
   {
     block: "🌅 MORNING",
     slots: [
-      { start: 360, end: 480, label: "6–8 AM James Songs", videos: ["t-v8rWA5Kuw"] },
+      { start: 360, end: 480, label: "6–8 AM James Songs", videos: ["yMb6dyT0DIw", "6cI4RBSeYYw", "TsOfiwrj0Fg", "QS4bx41IC60", "QZhG3HCEUiI", "5ZZB9Gs8tQU", "HdI1_v5-690", "GQo2FerStNA", "MSHszha1nKI", "5ZZB9Gs8tQU", "Ai-yiy-m2gA", "GMYvUEly2vA", "XgyfXc3Y364", "l32MpMIJceY", "fORmM5og6YQ", "EAVD5iUmZac"] },
       { start: 480, end: 600, label: "8–10 AM Kathryn Movies", videos: ["aqz-KE-bpKQ"] },
-      { start: 600, end: 720, label: "10–12 AM KathReid Edits", videos: ["kJQP7kiw5Fk"] }
+      { start: 600, end: 720, label: "10–12 AM Edits", videos: ["kJQP7kiw5Fk"] }
     ]
   },
   {
@@ -167,10 +195,9 @@ const schedule = [
   {
     block: "🌙 LATE NIGHT",
     slots: [
-      { start: 1320, end: 1380, label: "11 PM – 12 AM Comfort Loop", videos: ["t-v8rWA5Kuw"] },
-      { start: 1380, end: 120, label: "12 AM – 2 AM Edits Loop", videos: ["kJQP7kiw5Fk"] },
-      { start: 120, end: 240, label: "2 AM – 4 AM Highlights", videos: ["aqz-KE-bpKQ"] },
-      { start: 240, end: 360, label: "4 AM – 6 AM Soft Reset", videos: ["t-v8rWA5Kuw"] }
+      { start: 1380, end: 120, label: "12–2 AM Loop", videos: ["t-v8rWA5Kuw"] },
+      { start: 120, end: 240, label: "2–4 AM Highlights", videos: ["aqz-KE-bpKQ"] },
+      { start: 240, end: 360, label: "4–6 AM Reset", videos: ["kJQP7kiw5Fk"] }
     ]
   }
 ];
@@ -178,63 +205,76 @@ const schedule = [
 let player;
 let playlist = [];
 let index = 0;
-let hasSynced = false;
 
-/* 🇵🇭 time */
+/* TIME */
 function getMinutes(){
-  const now=new Date();
-  const m=new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
-  return m.getHours()*60+m.getMinutes();
+  const now = new Date();
+  const m = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
+  return m.getHours()*60 + m.getMinutes();
 }
 
 function inSlot(now,start,end){
-  if(start<end) return now>=start&&now<end;
-  return now>=start||now<end;
+  if(start < end) return now >= start && now < end;
+  return now >= start || now < end;
 }
 
 function getSlot(){
-  const now=getMinutes();
+  const now = getMinutes();
   for(const b of schedule){
     for(const s of b.slots){
       if(inSlot(now,s.start,s.end)){
-        return {block:b.block,slot:s};
+        return {block:b.block, slot:s};
       }
     }
   }
 }
 
-function shuffle(a){return a.sort(()=>Math.random()-0.5);}
+function shuffle(a){
+  return a.sort(()=>Math.random()-0.5);
+}
 
 function build(slot){
   playlist = shuffle([...slot.videos]);
   index = 0;
 }
 
-/* 📢 COMMERCIAL INSERTION LOGIC */
-function shouldPlayAd(i){
-  return i === 2; // plays after 2 videos
+/* FALLBACK */
+const fallbackVideos = [
+  "t-v8rWA5Kuw",
+  "aqz-KE-bpKQ",
+  "kJQP7kiw5Fk"
+];
+
+function handleError(){
+  index++;
+  if(index >= playlist.length){
+    build(getSlot().slot);
+  }
+
+  let vid = playlist[index] || fallbackVideos[Math.floor(Math.random()*fallbackVideos.length)];
+
+  player.loadVideoById(vid);
+  player.playVideo();
 }
 
+/* PLAY */
 function playNext(){
-  const data=getSlot();
-  const slot=data.slot;
+  const data = getSlot();
+  const slot = data.slot;
 
   if(!playlist.length) build(slot);
 
-  let vid;
+  const vid = playlist[index];
 
-  /* 🎬 insert commercial */
-  if(shouldPlayAd(index)){
-    vid = COMMERCIAL_VIDEO;
-    document.getElementById("nowAiring").innerText =
-      `${data.block} • 📢 COMMERCIAL BREAK (Someone, Someday)`;
-  } else {
-    vid = playlist[index];
-    document.getElementById("nowAiring").innerText =
-      `${data.block} • ${slot.label}`;
+  document.getElementById("nowAiring").innerText =
+    `${data.block} • ${slot.label}`;
+
+  try {
+    player.loadVideoById(vid);
+    player.playVideo();
+  } catch(e){
+    handleError();
   }
-
-  player.loadVideoById(vid);
 
   index++;
 
@@ -243,7 +283,7 @@ function playNext(){
   renderGuide();
 }
 
-/* TV GUIDE */
+/* GUIDE */
 function getAll(){
   let all=[];
   schedule.forEach(b=>{
@@ -255,18 +295,18 @@ function getAll(){
 }
 
 function renderGuide(){
-  const slots=getAll();
-  const now=getMinutes();
+  const slots = getAll();
+  const now = getMinutes();
 
-  let html="";
+  let html = "";
 
   slots.forEach(s=>{
-    let cls="guide-item";
+    let cls = "guide-item";
 
     if(inSlot(now,s.start,s.end)) cls="guide-item active";
-    else if(s.start>now) cls="guide-item next";
+    else if(s.start > now) cls="guide-item next";
 
-    html+=`
+    html += `
       <div class="${cls}">
         <span>${s.label}</span>
         <span>${format(s.start)} - ${format(s.end)}</span>
@@ -274,7 +314,7 @@ function renderGuide(){
     `;
   });
 
-  document.getElementById("guideContent").innerHTML=html;
+  document.getElementById("guideContent").innerHTML = html;
 }
 
 function format(m){
@@ -285,19 +325,27 @@ function format(m){
   return `${h}:${String(min).padStart(2,'0')} ${ampm}`;
 }
 
-/* YouTube */
+/* YOUTUBE */
 function onYouTubeIframeAPIReady(){
-  player=new YT.Player("player",{
+  player = new YT.Player("player",{
     videoId:"t-v8rWA5Kuw",
-    playerVars:{autoplay:1,controls:1,rel:0},
+    playerVars:{
+      autoplay:1,
+      controls:1,
+      rel:0,
+      mute:1
+    },
     events:{
       onReady:()=>{
-        playNext();
+        player.mute();
+        setTimeout(()=> playNext(), 500);
         renderGuide();
-        setInterval(renderGuide,60000);
       },
       onStateChange:(e)=>{
-        if(e.data===0) playNext();
+        if(e.data === 0) playNext();
+      },
+      onError:()=>{
+        handleError();
       }
     }
   });
