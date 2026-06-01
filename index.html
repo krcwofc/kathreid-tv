@@ -470,15 +470,7 @@ function handleError() {
     playlist[index] ||
     fallbackVideos[Math.floor(Math.random() * fallbackVideos.length)];
 
-  const nowSeconds = Math.floor(Date.now() / 1000);
-  const cycleLength = 60 * 60;
-  const offset = nowSeconds % cycleLength;
-
-  player.loadVideoById({
-    videoId: vid,
-    startSeconds: offset
-  });
-
+  player.loadVideoById(vid);
   player.playVideo();
 }
 
@@ -497,9 +489,10 @@ function playNext() {
   try {
     // 🔥 GLOBAL SYNC TIME (THIS IS THE MAGIC)
     const nowSeconds = Math.floor(Date.now() / 1000);
-    const cycleLength = 60 * 60; // 1 hour loop window (adjust if you want)
+   const START_OF_DAY = Math.floor(new Date().setHours(0,0,0,0) / 1000);
+const nowSeconds = Math.floor(Date.now() / 1000);
 
-    const offset = nowSeconds % cycleLength;
+const offset = nowSeconds - START_OF_DAY;
 
     player.loadVideoById({
       videoId: vid,
@@ -576,22 +569,32 @@ function onYouTubeIframeAPIReady(){
       rel:0
     },
 
-    events:{
+    events: {
 
-      onReady: (event) => {
+  onReady: (event) => {
 
-  event.target.mute();
-  renderGuide();
+    event.target.mute();
+    renderGuide();
 
-  // ❌ DO NOT auto-restart full playback chain immediately
-  // playNext();
+    setTimeout(() => {
+      try {
+        playNext();
+      } catch (e) {}
+    }, 1000);
 
-  // ✅ Instead: wait briefly, then sync playback properly
-  setTimeout(() => {
-    try {
+  },
+
+  onStateChange: (e) => {
+
+    if (e.data === 0) {
       playNext();
-    } catch (e) {}
-  }, 1000);
+    }
+
+  },
+
+  onError: () => {
+    handleError();
+  }
 
 }
 
