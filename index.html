@@ -420,7 +420,6 @@ let player;
 let playlist = [];
 let index = 0;
 
-/* TIME */
 function getMinutes(){
   const now = new Date();
   const m = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
@@ -434,85 +433,64 @@ function inSlot(now,start,end){
 
 function getSlot(){
   const now = getMinutes();
-  for(const b of schedule){
-    for(const s of b.slots){
-      if(inSlot(now,s.start,s.end)){
-        return {block:b.block, slot:s};
+
+  for(const block of schedule){
+    for(const slot of block.slots){
+      if(inSlot(now, slot.start, slot.end)){
+        return { block: block.block, slot };
       }
     }
   }
+
+  return { block: schedule[0].block, slot: schedule[0].slots[0] };
 }
 
-function shuffle(a){
-  return a.sort(()=>Math.random()-0.5);
+function shuffle(arr){
+  return [...arr].sort(()=>Math.random()-0.5);
 }
 
 function build(slot){
-  playlist = shuffle([...slot.videos]);
+  playlist = shuffle(slot.videos);
   index = 0;
 }
 
-/* FALLBACK */
-const fallbackVideos = [
-  "t-v8rWA5Kuw",
-  "aqz-KE-bpKQ",
-  "kJQP7kiw5Fk"
-];
-
-function handleError() {
-  index++;
-
-  if (index >= playlist.length) {
-    build(getSlot().slot);
-  }
-
-  const vid =
-    playlist[index] ||
-    fallbackVideos[Math.floor(Math.random() * fallbackVideos.length)];
-
-  player.loadVideoById(vid);
-  player.playVideo();
+function getGlobalOffset(){
+  const now = Math.floor(Date.now() / 1000);
+  const cycle = 60 * 60;
+  return now % cycle;
 }
 
-/* PLAY */
-function playNext() {
+function playNext(){
   const data = getSlot();
   const slot = data.slot;
 
-  if (!playlist.length) build(slot);
+  if(!playlist.length) build(slot);
 
-  const vid = playlist[index];
+  const vid = playlist[index % playlist.length];
 
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
-  try {
-    // 🔥 GLOBAL SYNC TIME (THIS IS THE MAGIC)
-    const nowSeconds = Math.floor(Date.now() / 1000);
-   const START_OF_DAY = Math.floor(new Date().setHours(0,0,0,0) / 1000);
-const nowSeconds = Math.floor(Date.now() / 1000);
+  const offset = getGlobalOffset();
 
-const offset = nowSeconds - START_OF_DAY;
+  player.loadVideoById({
+    videoId: vid,
+    startSeconds: offset
+  });
 
-    player.loadVideoById({
-      videoId: vid,
-      startSeconds: offset
-    });
-
-    player.playVideo();
-
-  } catch (e) {
-    handleError();
-  }
+  player.playVideo();
 
   index++;
-
-  if (index >= playlist.length) build(slot);
-
   renderGuide();
 }
 
-/* GUIDE */
+function handleError(){
+  index++;
+  const vid = playlist[index % playlist.length] || "t-v8rWA5Kuw";
+  player.loadVideoById(vid);
+  player.playVideo();
+}
+
 function getAll(){
   let all=[];
   schedule.forEach(b=>{
@@ -554,7 +532,6 @@ function format(m){
   return `${h}:${String(min).padStart(2,'0')} ${ampm}`;
 }
 
-/* YOUTUBE */
 function onYouTubeIframeAPIReady(){
 
   player = new YT.Player("player",{
@@ -569,52 +546,24 @@ function onYouTubeIframeAPIReady(){
       rel:0
     },
 
-    events: {
-
-  onReady: (event) => {
-
-    event.target.mute();
-    renderGuide();
-
-    setTimeout(() => {
-      try {
-        playNext();
-      } catch (e) {}
-    }, 1000);
-
-  },
-
-  onStateChange: (e) => {
-
-    if (e.data === 0) {
-      playNext();
-    }
-
-  },
-
-  onError: () => {
-    handleError();
-  }
-
-}
-
+    events:{
+      onReady:(event)=>{
+        event.target.mute();
+        renderGuide();
+        setTimeout(playNext, 800);
+      },
       onStateChange:(e)=>{
-
         if(e.data === 0){
           playNext();
         }
-
       },
-
-      onError:()=>{
-        handleError();
-      }
-
+      onError:handleError
     }
 
   });
 
 }
+
 const tag=document.createElement("script");
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
