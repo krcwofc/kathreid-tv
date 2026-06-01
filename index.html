@@ -454,10 +454,14 @@ function build(slot){
   index = 0;
 }
 
-function getGlobalOffset(){
+function getGlobalOffset(duration){
   const now = Math.floor(Date.now() / 1000);
-  const cycle = 60 * 60;
-  return now % cycle;
+
+  if (!duration || duration <= 0) {
+    return 0;
+  }
+
+  return now % duration;
 }
 
 function playNext(){
@@ -471,8 +475,9 @@ function playNext(){
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
-  const offset = getGlobalOffset();
-
+const duration = player.getDuration();
+const offset = getGlobalOffset(duration);
+  
   player.loadVideoById({
     videoId: vid,
     startSeconds: offset
