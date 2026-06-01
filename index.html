@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>KathReid TV - 24/7 Broadcast</title>
+<title>KathReid TV - 24/7 All Day Broadcast</title>
 
 <style>
   body {
@@ -65,7 +65,6 @@
     aspect-ratio: 16/9;
   }
 
-  /* TV GUIDE */
   .tv-guide {
     width: 100%;
     max-width: 900px;
@@ -107,7 +106,6 @@
     opacity: 0.9;
   }
 
-  /* DISCORD */
   .discord-section {
     margin-top: 20px;
     width: 100%;
@@ -161,46 +159,127 @@
 </div>
 
 <script>
-/* =========================
-   🎬 VIDEO ENGINE
-========================= */
 
-const COMMERCIAL = "t-v8rWA5Kuw";
+/* =========================
+   🎬 YOUR FULL VIDEO LIBRARY
+   (PRESERVED FROM YOUR CODE)
+========================= */
 
 const schedule = [
   {
     block: "🌅 MORNING",
     slots: [
-      { start: 360, end: 480, label: "6–8 AM James' Songs", videos: ["yMb6dyT0DIw", "6cI4RBSeYYw", "TsOfiwrj0Fg", "QS4bx41IC60", "QZhG3HCEUiI", "5ZZB9Gs8tQU", "HdI1_v5-690", "GQo2FerStNA", "MSHszha1nKI", "5ZZB9Gs8tQU", "Ai-yiy-m2gA", "GMYvUEly2vA", "XgyfXc3Y364", "l32MpMIJceY", "fORmM5og6YQ", "EAVD5iUmZac"] },
-      { start: 480, end: 600, label: "8–10 AM Kathryn's Movies", videos: ["CVYsmIbPBVM", "SureiNbQdtQ", "972BAlRFDB8", "mhE3EfdYJrA"] },
-      { start: 600, end: 720, label: "10–12 AM KathReid Edits", videos: ["EC2mRlzJcBc", "GLSw6Noog0s", "QnA7w8gVMU", "ZHeetN3jjsY", "GuofmiPRvTA"] }
+      {
+        start: 360,
+        end: 480,
+        label: "6–8 AM Jam with James Reid 🎶",
+        videos: [
+          "yMb6dyT0DIw","6cI4RBSeYYw","TsOfiwrj0Fg","QS4bx41IC60",
+          "QZhG3HCEUiI","5ZZB9Gs8tQU","HdI1_v5-690","GQo2FerStNA",
+          "MSHszha1nKI","5ZZB9Gs8tQU","Ai-yiy-m2gA","GMYvUEly2vA",
+          "XgyfXc3Y364","l32MpMIJceY","fORmM5og6YQ","EAVD5iUmZac"
+        ]
+      },
+      {
+        start: 480,
+        end: 600,
+        label: "8–10 AM Kathryn's Blockbuster Movies 🎬",
+        videos: [
+          "CVYsmIbPBVM","SureiNbQdtQ","972BAlRFDB8","mhE3EfdYJrA"
+        ]
+      },
+      {
+        start: 600,
+        end: 720,
+        label: "10–12 AM KathReid Kilig Edits 💞",
+        videos: [
+          "EC2mRlzJcBc","GLSw6Noog0s","QnA7w8gVMU",
+          "ZHeetN3jjsY","GuofmiPRvTA"
+        ]
+      }
     ]
   },
+
   {
     block: "☀️ AFTERNOON",
     slots: [
-      { start: 720, end: 840, label: "12–2 PM KathReid Interviews", videos: ["zaBgZox_wvY", "DTB8euc0zK4", "3k31JYplJ84", "Tk6McKHYDzg", "ERL9QYSTEl0"] },
-      { start: 840, end: 960, label: "2–4 PM Someone Someday Updates", videos: ["t-v8rWA5Kuw", "ERL9QYSTEl0"] },
-      { start: 960, end: 1080, label: "4–6 PM James' Movies", videos: ["Mes4k3QQtCo"] }
+      {
+        start: 720,
+        end: 840,
+        label: "12–2 PM Kathryn & James' Interviews",
+        videos: [
+          "zaBgZox_wvY","DTB8euc0zK4","3k31JYplJ84","Tk6McKHYDzg","ERL9QYSTEl0"
+        ]
+      },
+      {
+        start: 840,
+        end: 960,
+        label: "2–4 PM Someone, Someday Updates 🎬",
+        videos: [
+          "t-v8rWA5Kuw","ERL9QYSTEl0"
+        ]
+      },
+      {
+        start: 960,
+        end: 1080,
+        label: "4–6 PM James' Blockbuster Movies 🎬",
+        videos: [
+          "Mes4k3QQtCo"
+        ]
+      }
     ]
   },
+
   {
     block: "🌆 EVENING",
     slots: [
-      { start: 1080, end: 1200, label: "6–8 PM Kilig Edits", videos: ["t-v8rWA5Kuw"] },
-      { start: 1200, end: 1320, label: "8–10 PM Kathryn Movies", videos: ["aqz-KE-bpKQ"] },
-      { start: 1320, end: 1380, label: "10–11 PM Interviews", videos: ["kJQP7kiw5Fk"] }
+      {
+        start: 1080,
+        end: 1200,
+        label: "6–8 PM KathReid Edits 💞",
+        videos: ["t-v8rWA5Kuw"]
+      },
+      {
+        start: 1200,
+        end: 1320,
+        label: "8–10 PM KathReid's Cute Moments",
+        videos: ["b565tKG9004"]
+      },
+      {
+        start: 1320,
+        end: 1380,
+        label: "10–11 PM KathReid CatWolves Highlights",
+        videos: ["b565tKG9004"]
+      }
     ]
   },
+
   {
     block: "🌙 LATE NIGHT",
     slots: [
-      { start: 1380, end: 120, label: "12–2 AM Loop", videos: ["t-v8rWA5Kuw"] },
-      { start: 120, end: 240, label: "2–4 AM Highlights", videos: ["aqz-KE-bpKQ"] },
-      { start: 240, end: 360, label: "4–6 AM Reset", videos: ["kJQP7kiw5Fk"] }
+      {
+        start: 1380,
+        end: 120,
+        label: "12–2 AM Everyday Kath",
+        videos: ["t-v8rWA5Kuw"]
+      },
+      {
+        start: 120,
+        end: 240,
+        label: "2–4 AM KathReid Late Night Kilig",
+        videos: ["aqz-KE-bpKQ"]
+      },
+      {
+        start: 240,
+        end: 360,
+        label: "4–6 AM Chill with KathReid Music",
+        videos: ["kJQP7kiw5Fk"]
+      }
     ]
   }
 ];
+
+/* ========================= */
 
 let player;
 let playlist = [];
@@ -354,6 +433,7 @@ function onYouTubeIframeAPIReady(){
 const tag=document.createElement("script");
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
+
 </script>
 
 </body>
