@@ -429,6 +429,8 @@ let index = 0;
 
 let currentSlotLabel = "";
 
+    let firstJoin = true;
+
 function getMinutes(){
   const now = new Date();
   const m = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
@@ -477,27 +479,24 @@ function playNext(){
   const data = getSlot();
   const slot = data.slot;
 
+  // detect block change
   if (slot.label !== currentSlotLabel) {
     currentSlotLabel = slot.label;
     build(slot);
   }
 
-  if(!playlist.length) build(slot);
+  if (!playlist.length) build(slot);
 
   const vid = playlist[index % playlist.length];
 
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
-const duration = player.getDuration();
-const offset = getGlobalOffset(duration);
-  
+  // ALWAYS load new video properly
   player.loadVideoById({
     videoId: vid,
-    startSeconds: offset
+    startSeconds: 0   // 👈 IMPORTANT FIX
   });
-
-  player.playVideo();
 
   index++;
   renderGuide();
@@ -634,20 +633,12 @@ window.addEventListener("scroll", () => {
   }
 });
 
-  setInterval(() => {
-
+ setInterval(() => {
   const data = getSlot();
 
   if (data.slot.label !== currentSlotLabel) {
-
-    currentSlotLabel = data.slot.label;
-
-    build(data.slot);
-
-    playNext();
-
+    playNext(); // handles rebuild + switch cleanly
   }
-
 }, 30000);
 
 </script>
