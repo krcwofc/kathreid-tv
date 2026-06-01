@@ -486,7 +486,11 @@ function playNext(){
     `${data.block} • ${slot.label}`;
 
   try {
-    player.loadVideoById(vid);
+    // ONLY load if different video
+    if (player.getVideoData().video_id !== vid) {
+      player.loadVideoById(vid);
+    }
+
     player.playVideo();
   } catch(e){
     handleError();
