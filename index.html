@@ -65,6 +65,57 @@
     aspect-ratio: 16/9;
   }
 
+  .player-wrap{
+  position:relative;
+  width:100%;
+  max-width:900px;
+}
+
+#tapOverlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:10;
+  cursor:pointer;
+  text-align:center;
+  transition:.3s;
+}
+
+#tapOverlay.hidden{
+  display:none;
+}
+
+.tap-btn{
+  background:red;
+  padding:14px 24px;
+  border-radius:8px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.discussion-box{
+  background:rgba(255,255,255,.04);
+  border-radius:10px;
+  padding:18px;
+  text-align:center;
+  line-height:1.7;
+}
+
+.join-btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 18px;
+  background:red;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:bold;
+}
+
   .tv-guide {
     width: 100%;
     max-width: 900px;
@@ -137,8 +188,20 @@
 
 <div class="now-airing" id="nowAiring">Loading broadcast...</div>
 
-<div id="player"></div>
+<div class="player-wrap">
 
+  <div id="tapOverlay">
+    <div>
+      📺 KATHREID TV
+      <br><br>
+      Tap to Enter Live Broadcast
+      <div class="tap-btn">▶ WATCH LIVE</div>
+    </div>
+  </div>
+
+  <div id="player"></div>
+
+</div>
 <!-- TV GUIDE -->
 <div class="tv-guide">
   <div class="guide-title">📺 TV GUIDE</div>
@@ -147,19 +210,34 @@
 
 <!-- DISCORD -->
 <div class="discord-section">
-  <div class="discord-title">💬 ON AIR DISCUSSION</div>
-<!--
-  <iframe
-    src="https://discord.com/widget?id=1510712484531666965&theme=dark"
-    width="320"
-    height="400"
-    frameborder="0"
-    sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
-  </iframe>
-  -->
-</div>
 
-<script>
+  <div class="discord-title">
+    💬 ON AIR DISCUSSION
+  </div>
+
+  <div class="discussion-box">
+
+    Join fellow viewers during the live broadcast.
+
+    <br><br>
+
+    💞 KathReid Edits<br>
+    🎬 Someone, Someday Updates<br>
+    🎵 James Reid Music<br>
+    📺 Kathryn Bernardo Movie Moments
+
+    <br><br>
+
+    <a
+      href="YOUR_DISCORD_INVITE_LINK"
+      target="_blank"
+      class="join-btn">
+      JOIN COMMUNITY
+    </a>
+
+  </div>
+
+</div>
 
 /* =========================
    🎬 YOUR FULL VIDEO LIBRARY
@@ -432,33 +510,77 @@ function format(m){
 
 /* YOUTUBE */
 function onYouTubeIframeAPIReady(){
+
   player = new YT.Player("player",{
+
     videoId:"t-v8rWA5Kuw",
+
     playerVars:{
       autoplay:1,
+      mute:1,
+      playsinline:1,
       controls:1,
-      rel:0,
-      mute:1
+      rel:0
     },
+
     events:{
-      onReady:()=>{
-        player.mute();
-        setTimeout(()=> playNext(), 500);
+
+      onReady:(event)=>{
+
+        event.target.mute();
+
         renderGuide();
+
+        playNext();
+
+        setTimeout(()=>{
+          event.target.playVideo();
+        },500);
+
       },
+
       onStateChange:(e)=>{
-        if(e.data === 0) playNext();
+
+        if(e.data === 0){
+          playNext();
+        }
+
       },
+
       onError:()=>{
         handleError();
       }
-    }
-  });
-}
 
+    }
+
+  });
+
+}
 const tag=document.createElement("script");
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
+
+/* MOBILE AUTOPLAY FALLBACK */
+
+const overlay = document.getElementById("tapOverlay");
+
+overlay.addEventListener("click",()=>{
+
+  overlay.classList.add("hidden");
+
+  try{
+
+    player.unMute();
+
+    player.playVideo();
+
+  }catch(err){
+
+    console.log(err);
+
+  }
+
+});
 
 </script>
 
