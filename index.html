@@ -427,6 +427,8 @@ let player;
 let playlist = [];
 let index = 0;
 
+let currentSlotLabel = "";
+
 function getMinutes(){
   const now = new Date();
   const m = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
@@ -474,6 +476,11 @@ function getGlobalOffset(duration){
 function playNext(){
   const data = getSlot();
   const slot = data.slot;
+
+  if (slot.label !== currentSlotLabel) {
+    currentSlotLabel = slot.label;
+    build(slot);
+  }
 
   if(!playlist.length) build(slot);
 
@@ -626,6 +633,22 @@ window.addEventListener("scroll", () => {
     playerWrap.classList.add("sticky");
   }
 });
+
+  setInterval(() => {
+
+  const data = getSlot();
+
+  if (data.slot.label !== currentSlotLabel) {
+
+    currentSlotLabel = data.slot.label;
+
+    build(data.slot);
+
+    playNext();
+
+  }
+
+}, 30000);
 
 </script>
 
