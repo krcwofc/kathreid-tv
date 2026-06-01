@@ -55,7 +55,7 @@
       margin-top: -6px;
     }
 
-    /* NOW AIRING */
+    /* STATIC NOW AIRING BAR */
     .now-airing {
       width: 100%;
       max-width: 900px;
@@ -116,9 +116,9 @@
     <div class="live">🔴 LIVE</div>
   </div>
 
-  <div class="tagline">Your 24/7 Kath & Reid comfort channel</div>
+  <div class="tagline">Your 24/7 Kathryn Bernardo & James Reid Comfort Channel</div>
 
-  <!-- NOW AIRING -->
+  <!-- STATIC NOW AIRING (NO SCROLLING) -->
   <div class="now-airing" id="nowAiring">
     Loading schedule...
   </div>
@@ -143,7 +143,7 @@
   </div>
 
   <script>
-    // 🎬 SCHEDULE (MANILA TIME BASED)
+    // 🎬 MANILA-BASED SCHEDULE
     const schedule = [
       {
         start: 0,
@@ -167,7 +167,7 @@
 
     let player;
 
-    // 🇵🇭 Get Manila time in minutes
+    // 🇵🇭 Manila time in minutes
     function getManilaMinutes() {
       const now = new Date();
       const manila = new Date(
@@ -176,13 +176,11 @@
       return manila.getHours() * 60 + manila.getMinutes();
     }
 
-    // 📺 Get current show
     function getCurrentShow() {
       const minutes = getManilaMinutes();
       return schedule.find(s => minutes >= s.start && minutes < s.end);
     }
 
-    // 🎬 Load current content
     function loadCurrentShow() {
       const show = getCurrentShow();
 
@@ -195,7 +193,6 @@
       player.loadVideoById(show.videos[0]);
     }
 
-    // 📺 YouTube API
     function onYouTubeIframeAPIReady() {
       player = new YT.Player("player", {
         videoId: schedule[0].videos[0],
@@ -207,8 +204,6 @@
         events: {
           onReady: () => {
             loadCurrentShow();
-
-            // update every minute (TV-style switching)
             setInterval(loadCurrentShow, 60000);
           }
         }
