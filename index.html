@@ -292,10 +292,12 @@ const schedule = [
       {
         start: 480,
         end: 600,
-        label: "8–10 AM Kathryn's Blockbuster Movies 🎬",
+        label: "8–10 AM Kathryn's Blockbuster Movies & Highlights 🎬",
         videos: [
           "CVYsmIbPBVM","SureiNbQdtQ","972BAlRFDB8",
-          "mhE3EfdYJrA", "BvMJ0fNzIok"
+          "mhE3EfdYJrA", "BvMJ0fNzIok", "HQKyVnYZ3Lg",
+          "kA9rZp3V0CY", "rVuTRl0sWi4", "CgCCOefMiv8",
+          "VuwmlwcqTlI"
         ]
       },
       {
@@ -310,7 +312,9 @@ const schedule = [
           "qcDPVUJyJRs", "GkjgobxgX8c", "6mbe17ma4So",
           "6MqFTvh5qh0", "YNW8wYnIF0E", "6-aoGYPdQxY",
           "pEkKar32vTw", "MWg3r8066wo", "YoiDsia1UpA",
-          "mZz6XgKOwP4"
+          "mZz6XgKOwP4", "xdImYLb0mBY", "fmlUSPfl0s4",
+          "FdkYRc3qlp8", "PSz0TDDhMp4", "mBCfMUBZyYI",
+          "acJz5K75iEE"
         ]
       }
     ]
@@ -364,7 +368,11 @@ const schedule = [
           "biSPsXnd-Ww", "qOnzNXe4jk8", "t34qXgPqSuU",
           "sN-xpoz9qCU", "ZE7alShzcA8", "KRpD_C8q2Qc",
           "EoRG75MKteg", "fl_cZMHKfOc", "6-aoGYPdQxY",
-          "Hf7xAJs9PF8", "f3Qo1ZY4Z2Q"
+          "Hf7xAJs9PF8", "f3Qo1ZY4Z2Q", "fxxQdkHJLOE",
+          "pNzjf3FNEyQ", "mW_NNLSwCWU", "ssWXBtR_pZc",
+          "d2VilgAbDzg", "RrSjQq9QNVI", "MzAcIYPi9bc",
+          "H2mBilUI0N4", "BHCTW3a6mWM", "vywcDyRiAVY",
+          "RuIQdibXkLU", "60g8jrIuwog", "WPoWmkCC86I"
         ]
       },
       {
@@ -414,7 +422,7 @@ const schedule = [
         end: 360,
         label: "4–6 AM KathReid Late Night Kilig",
         videos: [
-          "kJQP7kiw5Fk"
+          "kJQP7kiw5Fk", "PSz0TDDhMp4", "WPoWmkCC86I"
         ]
       }
     ]
@@ -466,14 +474,20 @@ let playedSet = new Set();
 function build(slot) {
   const promo = "t-v8rWA5Kuw";
 
-  // keep a rotating shuffled queue
-  playlist = shuffle(slot.videos);
+  // full shuffled queue
+  let queue = [...slot.videos];
 
-  // ALWAYS inject promo at least once per cycle
-  if (!playlist.includes(promo)) {
-    playlist.splice(1, 0, promo); // second position
+  // Fisher-Yates shuffle (better than Math.random sort)
+  for (let i = queue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
   }
 
+  // inject promo once per cycle
+  const insertIndex = Math.floor(Math.random() * queue.length);
+  queue.splice(insertIndex, 0, promo);
+
+  playlist = queue;
   index = 0;
 }
     
@@ -495,33 +509,42 @@ function playNext(){
   if (slot.label !== currentSlotLabel) {
     currentSlotLabel = slot.label;
     build(slot);
-
-    slotJustChanged = true; // 👈 KEY FIX
+    index = 0;              // 🔥 RESET INDEX HERE
+    slotJustChanged = true;
   }
 
-  if (!playlist.length) build(slot);
+  if (!playlist.length) {
+    build(slot);
+    index = 0;              // 🔥 ALSO RESET HERE SAFETY
+  }
 
   const vid = playlist[index % playlist.length];
 
-document.getElementById("nowAiring").innerText =
-  `${data.block} • ${slot.label}`;
+  document.getElementById("nowAiring").innerText =
+    `${data.block} • ${slot.label}`;
 
-let startTime = 0;
+  let startTime = 0;
 
-// only FIRST video in slot gets offset
-if (slotJustChanged && index === 0) {
-  const duration = player.getDuration();
-  startTime = getGlobalOffset(duration);
-  slotJustChanged = false;
-}
+  // only offset first video in slot
+  if (slotJustChanged && index === 0) {
+    const duration = player.getDuration();
+    startTime = getGlobalOffset(duration);
+    slotJustChanged = false;
+  }
 
-player.loadVideoById({
-  videoId: vid,
-  startSeconds: startTime
-});
+  player.loadVideoById({
+    videoId: vid,
+    startSeconds: startTime
+  });
 
-index++;
-  
+  index++;
+
+  // 🔥 when playlist ends → rebuild cleanly
+  if (index >= playlist.length) {
+    build(slot);
+    index = 0;   // VERY IMPORTANT
+  }
+
   renderGuide();
 }
 
