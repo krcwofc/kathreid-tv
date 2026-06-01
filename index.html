@@ -430,6 +430,7 @@ let index = 0;
 let currentSlotLabel = "";
 
     let firstJoin = true;
+    let slotJustChanged = true;
 
 function getMinutes(){
   const now = new Date();
@@ -479,10 +480,12 @@ function playNext(){
   const data = getSlot();
   const slot = data.slot;
 
-  // detect block change
+  // detect slot change
   if (slot.label !== currentSlotLabel) {
     currentSlotLabel = slot.label;
     build(slot);
+
+    slotJustChanged = true; // 👈 KEY FIX
   }
 
   if (!playlist.length) build(slot);
@@ -492,10 +495,18 @@ function playNext(){
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
-  // ALWAYS load new video properly
+  let startTime = 0;
+
+  // 🟢 ONLY FIRST VIDEO IN SLOT uses time offset
+  if (slotJustChanged) {
+    const duration = player.getDuration();
+    startTime = getGlobalOffset(duration);
+    slotJustChanged = false;
+  }
+
   player.loadVideoById({
     videoId: vid,
-    startSeconds: 0   // 👈 IMPORTANT FIX
+    startSeconds: startTime
   });
 
   index++;
@@ -637,7 +648,8 @@ window.addEventListener("scroll", () => {
   const data = getSlot();
 
   if (data.slot.label !== currentSlotLabel) {
-    playNext(); // handles rebuild + switch cleanly
+    slotJustChanged = true;
+    playNext();
   }
 }, 30000);
 
