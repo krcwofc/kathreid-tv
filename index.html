@@ -48,14 +48,16 @@
       100% { opacity: 1; }
     }
 
+    /* UPDATED TAGLINE (NETWORK STYLE) */
     .tagline {
       font-size: 12px;
-      opacity: 0.6;
+      opacity: 0.7;
       text-align: center;
       margin-top: -6px;
+      letter-spacing: 0.5px;
     }
 
-    /* STATIC NOW AIRING BAR */
+    /* NOW AIRING */
     .now-airing {
       width: 100%;
       max-width: 900px;
@@ -68,6 +70,7 @@
       text-align: center;
       letter-spacing: 0.5px;
       margin-bottom: 10px;
+      transition: opacity 0.6s ease;
     }
 
     /* PLAYER */
@@ -77,12 +80,7 @@
       aspect-ratio: 16/9;
       border-radius: 8px;
       overflow: hidden;
-    }
-
-    .info {
-      margin-top: 10px;
-      text-align: center;
-      opacity: 0.8;
+      transition: opacity 0.6s ease;
     }
 
     /* DISCORD */
@@ -116,17 +114,18 @@
     <div class="live">🔴 LIVE</div>
   </div>
 
-  <div class="tagline">Your 24/7 Kathryn Bernardo & James Reid Comfort Channel</div>
+  <!-- UPDATED NETWORK TAGLINE -->
+  <div class="tagline">
+    24/7 KathReid Network — Streaming Kathryn Bernardo & James Reid Moments, Music & Films
+  </div>
 
-  <!-- STATIC NOW AIRING (NO SCROLLING) -->
+  <!-- NOW AIRING -->
   <div class="now-airing" id="nowAiring">
-    Loading schedule...
+    Loading broadcast schedule...
   </div>
 
   <!-- PLAYER -->
   <div id="player"></div>
-
-  <div class="info" id="info">Connecting to KathReid TV...</div>
 
   <!-- DISCORD -->
   <div class="discord-section">
@@ -143,31 +142,42 @@
   </div>
 
   <script>
-    // 🎬 MANILA-BASED SCHEDULE
+    // 📺 MANILA-BASED BROADCAST SCHEDULE
     const schedule = [
       {
         start: 0,
         end: 480,
-        title: "Morning Kilig Moments",
+        title: "Morning Kilig Moments (Edits & Soft Scenes)",
         videos: ["t-v8rWA5Kuw"]
       },
       {
         start: 480,
-        end: 1080,
-        title: "Afternoon Interviews",
+        end: 720,
+        title: "Afternoon Interviews (Kathryn & James Features)",
         videos: ["aqz-KE-bpKQ"]
       },
       {
-        start: 1080,
-        end: 1440,
-        title: "Evening Fan Edits",
+        start: 720,
+        end: 1080,
+        title: "Afternoon Films (Movies & Highlights)",
         videos: ["kJQP7kiw5Fk"]
+      },
+      {
+        start: 1080,
+        end: 1320,
+        title: "Evening Kilig Peak (Emotional Moments & Edits)",
+        videos: ["t-v8rWA5Kuw"]
+      },
+      {
+        start: 1320,
+        end: 1440,
+        title: "Late Night Comfort Loop (Music & Replays)",
+        videos: ["aqz-KE-bpKQ"]
       }
     ];
 
     let player;
 
-    // 🇵🇭 Manila time in minutes
     function getManilaMinutes() {
       const now = new Date();
       const manila = new Date(
@@ -186,9 +196,6 @@
 
       document.getElementById("nowAiring").innerText =
         "🎬 NOW AIRING: " + show.title + " (Manila Time)";
-
-      document.getElementById("info").innerText =
-        "Now Playing: " + show.title;
 
       player.loadVideoById(show.videos[0]);
     }
