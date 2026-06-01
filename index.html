@@ -69,10 +69,10 @@
   position: relative;
   width: 100%;
   max-width: 900px;
-  transition: all 0.4s ease;
+  transform: translateZ(0); /* prevents flicker on mobile */
 }
 
-/* Sticky full player */
+/* ONLY ONE sticky mode */
 .player-wrap.sticky{
   position: sticky;
   top: 0;
@@ -81,7 +81,7 @@
   box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
-/* Mini floating player (mobile feel like YouTube/Twitch) */
+/* mini mode (fixed ONLY) */
 .player-wrap.mini{
   position: fixed;
   bottom: 15px;
@@ -91,6 +91,15 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+  #player iframe{
+  transform: translateZ(0);
+}
+  
+/* smooth transition without layout flicker */
+#player{
+  will-change: transform;
 }
 
 #tapOverlay{
@@ -615,22 +624,34 @@ if (overlay) {
 
     const playerWrap = document.querySelector(".player-wrap");
 
-window.addEventListener("scroll", () => {
-  const scrollY = window.scrollY;
+let mode = "top"; // prevents constant re-applying
 
-  if (scrollY > 300 && scrollY < 1200) {
-    // floating mini TV mode
-    playerWrap.classList.add("mini");
-    playerWrap.classList.remove("sticky");
-  } else if (scrollY <= 300) {
-    // normal top TV mode
-    playerWrap.classList.remove("mini");
-    playerWrap.classList.add("sticky");
-  } else {
-    // back to normal flow (bottom of page sections)
-    playerWrap.classList.remove("mini");
-    playerWrap.classList.remove("sticky");
+window.addEventListener("scroll", () => {
+
+  const y = window.scrollY;
+
+  let newMode = "top";
+
+  if (y > 400 && y < 1400) {
+    newMode = "mini";
+  } else if (y >= 1400) {
+    newMode = "normal";
   }
+
+  if (newMode === mode) return; // 👈 KEY FIX (prevents flicker)
+
+  mode = newMode;
+
+  playerWrap.classList.remove("mini", "sticky");
+
+  if (mode === "mini") {
+    playerWrap.classList.add("mini");
+  }
+
+  if (mode === "top") {
+    playerWrap.classList.add("sticky");
+  }
+
 });
 
 </script>
