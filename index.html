@@ -459,24 +459,35 @@ const fallbackVideos = [
   "kJQP7kiw5Fk"
 ];
 
-function handleError(){
+function handleError() {
   index++;
-  if(index >= playlist.length){
+
+  if (index >= playlist.length) {
     build(getSlot().slot);
   }
 
-  let vid = playlist[index] || fallbackVideos[Math.floor(Math.random()*fallbackVideos.length)];
+  const vid =
+    playlist[index] ||
+    fallbackVideos[Math.floor(Math.random() * fallbackVideos.length)];
 
-  player.loadVideoById(vid);
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  const cycleLength = 60 * 60;
+  const offset = nowSeconds % cycleLength;
+
+  player.loadVideoById({
+    videoId: vid,
+    startSeconds: offset
+  });
+
   player.playVideo();
 }
 
 /* PLAY */
-function playNext(){
+function playNext() {
   const data = getSlot();
   const slot = data.slot;
 
-  if(!playlist.length) build(slot);
+  if (!playlist.length) build(slot);
 
   const vid = playlist[index];
 
@@ -484,19 +495,26 @@ function playNext(){
     `${data.block} • ${slot.label}`;
 
   try {
-    // ONLY load if different video
-    if (player.getVideoData().video_id !== vid) {
-      player.loadVideoById(vid);
-    }
+    // 🔥 GLOBAL SYNC TIME (THIS IS THE MAGIC)
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const cycleLength = 60 * 60; // 1 hour loop window (adjust if you want)
+
+    const offset = nowSeconds % cycleLength;
+
+    player.loadVideoById({
+      videoId: vid,
+      startSeconds: offset
+    });
 
     player.playVideo();
-  } catch(e){
+
+  } catch (e) {
     handleError();
   }
 
   index++;
 
-  if(index >= playlist.length) build(slot);
+  if (index >= playlist.length) build(slot);
 
   renderGuide();
 }
@@ -560,23 +578,22 @@ function onYouTubeIframeAPIReady(){
 
     events:{
 
-      onReady:(event)=>{
+      onReady: (event) => {
 
-      event.target.mute();
+  event.target.mute();
+  renderGuide();
 
-renderGuide();
+  // ❌ DO NOT auto-restart full playback chain immediately
+  // playNext();
 
-playNext();
+  // ✅ Instead: wait briefly, then sync playback properly
+  setTimeout(() => {
+    try {
+      playNext();
+    } catch (e) {}
+  }, 1000);
 
-setTimeout(() => {
-
-  try {
-    event.target.playVideo();
-  } catch(e) {}
-
-}, 500);
-
-      },
+}
 
       onStateChange:(e)=>{
 
