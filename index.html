@@ -66,19 +66,14 @@
   }
 
   .player-wrap{
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  transform: translateZ(0); /* prevents flicker on mobile */
-}
-
-/* ONLY ONE sticky mode */
-.player-wrap.sticky{
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: #0b0b0f;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  width: 100%;
+  max-width: 900px;
+
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* mini mode (fixed ONLY) */
@@ -86,11 +81,14 @@
   position: fixed;
   bottom: 15px;
   right: 15px;
-  width: 280px;
+  width: min(320px, 90vw);
+
   z-index: 2000;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+
+  transform: scale(0.35);
+  transform-origin: bottom right;
 }
 
   #player iframe{
@@ -626,36 +624,26 @@ if (overlay) {
 
 }
 
-    const playerWrap = document.querySelector(".player-wrap");
+ const playerWrap = document.querySelector(".player-wrap");
 
-let mode = "top"; // prevents constant re-applying
+let isMini = false;
 
 window.addEventListener("scroll", () => {
-
   const y = window.scrollY;
 
-  let newMode = "top";
+  const shouldBeMini = y > 600;
 
-  if (y > 400 && y < 1400) {
-    newMode = "mini";
-  } else if (y >= 1400) {
-    newMode = "normal";
-  }
+  if (shouldBeMini === isMini) return;
 
-  if (newMode === mode) return; // 👈 KEY FIX (prevents flicker)
+  isMini = shouldBeMini;
 
-  mode = newMode;
-
-  playerWrap.classList.remove("mini", "sticky");
-
-  if (mode === "mini") {
+  if (isMini) {
     playerWrap.classList.add("mini");
-  }
-
-  if (mode === "top") {
+    playerWrap.classList.remove("sticky");
+  } else {
+    playerWrap.classList.remove("mini");
     playerWrap.classList.add("sticky");
   }
-
 });
 
 </script>
