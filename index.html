@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KathReid TV - 24/7 Channel</title>
+  <title>KathReid TV - 24/7 Broadcast</title>
 
   <style>
     body {
@@ -51,34 +51,23 @@
     .tagline {
       font-size: 12px;
       opacity: 0.6;
-      margin-top: -6px;
       text-align: center;
+      margin-top: -6px;
     }
 
-    /* TICKER */
-    .ticker {
+    /* NOW AIRING */
+    .now-airing {
       width: 100%;
       max-width: 900px;
-      overflow: hidden;
       background: rgba(255, 0, 0, 0.08);
       border-top: 1px solid rgba(255, 0, 0, 0.2);
       border-bottom: 1px solid rgba(255, 0, 0, 0.2);
-      margin-bottom: 10px;
-    }
-
-    .ticker-text {
-      display: inline-block;
-      white-space: nowrap;
-      padding: 6px 0;
-      font-size: 12px;
+      padding: 8px 12px;
+      font-size: 13px;
       font-weight: bold;
-      letter-spacing: 1px;
-      animation: scroll 12s linear infinite;
-    }
-
-    @keyframes scroll {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+      text-align: center;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
     }
 
     /* PLAYER */
@@ -111,7 +100,6 @@
       font-weight: bold;
       letter-spacing: 1px;
       margin-bottom: 10px;
-      opacity: 0.9;
     }
 
     iframe {
@@ -130,24 +118,22 @@
 
   <div class="tagline">Your 24/7 Kath & Reid comfort channel</div>
 
-  <!-- TICKER -->
-  <div class="ticker">
-    <div class="ticker-text">
-      🔴 BREAKING • 🎬 NOW AIRING • KathReid TV LIVE BROADCAST • 🔴 BREAKING • 🎬 NOW AIRING •
-    </div>
+  <!-- NOW AIRING -->
+  <div class="now-airing" id="nowAiring">
+    Loading schedule...
   </div>
 
   <!-- PLAYER -->
   <div id="player"></div>
 
-  <div class="info" id="info">Loading KathReid TV...</div>
+  <div class="info" id="info">Connecting to KathReid TV...</div>
 
   <!-- DISCORD -->
   <div class="discord-section">
     <div class="air-header">🔴 ON AIR DISCUSSION</div>
 
     <iframe
-      src="https://discord.com/widget?id=1510712484531666965&theme=dark"
+      src="https://discord.com/widget?id=YOUR_SERVER_ID&theme=dark"
       width="320"
       height="400"
       allowtransparency="true"
@@ -157,26 +143,62 @@
   </div>
 
   <script>
-    const videos = [
-      { id: "t-v8rWA5Kuw", title: "Test 1" },
-      { id: "aqz-KE-bpKQ", title: "Test 2" },
-      { id: "kJQP7kiw5Fk", title: "Test 3" }
+    // 🎬 SCHEDULE (MANILA TIME BASED)
+    const schedule = [
+      {
+        start: 0,
+        end: 480,
+        title: "Morning Kilig Moments",
+        videos: ["t-v8rWA5Kuw"]
+      },
+      {
+        start: 480,
+        end: 1080,
+        title: "Afternoon Interviews",
+        videos: ["aqz-KE-bpKQ"]
+      },
+      {
+        start: 1080,
+        end: 1440,
+        title: "Evening Fan Edits",
+        videos: ["kJQP7kiw5Fk"]
+      }
     ];
 
-    let index = 0;
     let player;
 
-    function loadVideo(i) {
-      const video = videos[i];
-      document.getElementById("info").innerText =
-        "Now Playing: " + video.title;
-
-      player.loadVideoById(video.id);
+    // 🇵🇭 Get Manila time in minutes
+    function getManilaMinutes() {
+      const now = new Date();
+      const manila = new Date(
+        now.toLocaleString("en-US", { timeZone: "Asia/Manila" })
+      );
+      return manila.getHours() * 60 + manila.getMinutes();
     }
 
+    // 📺 Get current show
+    function getCurrentShow() {
+      const minutes = getManilaMinutes();
+      return schedule.find(s => minutes >= s.start && minutes < s.end);
+    }
+
+    // 🎬 Load current content
+    function loadCurrentShow() {
+      const show = getCurrentShow();
+
+      document.getElementById("nowAiring").innerText =
+        "🎬 NOW AIRING: " + show.title + " (Manila Time)";
+
+      document.getElementById("info").innerText =
+        "Now Playing: " + show.title;
+
+      player.loadVideoById(show.videos[0]);
+    }
+
+    // 📺 YouTube API
     function onYouTubeIframeAPIReady() {
       player = new YT.Player("player", {
-        videoId: videos[0].id,
+        videoId: schedule[0].videos[0],
         playerVars: {
           autoplay: 1,
           controls: 1,
@@ -184,13 +206,10 @@
         },
         events: {
           onReady: () => {
-            loadVideo(0);
-          },
-          onStateChange: (event) => {
-            if (event.data === 0) {
-              index = (index + 1) % videos.length;
-              loadVideo(index);
-            }
+            loadCurrentShow();
+
+            // update every minute (TV-style switching)
+            setInterval(loadCurrentShow, 60000);
           }
         }
       });
