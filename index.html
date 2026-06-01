@@ -16,69 +16,6 @@
       align-items: center;
     }
 
-    /* 🔴 TV ID STING OVERLAY */
-    .id-sting {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      animation: fadeOut 1s ease 3.5s forwards;
-    }
-
-    .id-logo {
-      font-size: 34px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      animation: glow 1s infinite alternate;
-    }
-
-    .id-live {
-      margin-top: 10px;
-      font-size: 14px;
-      color: red;
-      font-weight: bold;
-      animation: blink 0.6s infinite;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 0 0 10px red; }
-      to { text-shadow: 0 0 25px red; }
-    }
-
-    @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0.2; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-
-    /* MAIN CONTENT FADE IN */
-    .main {
-      opacity: 0;
-      animation: showMain 1s ease 3.8s forwards;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    @keyframes showMain {
-      to { opacity: 1; }
-    }
-
     /* TOP BAR */
     .top-bar {
       width: 100%;
@@ -93,7 +30,6 @@
     .logo {
       font-size: 18px;
       font-weight: bold;
-      letter-spacing: 1px;
     }
 
     .live {
@@ -116,20 +52,19 @@
       opacity: 0.7;
       text-align: center;
       margin-top: -6px;
-      letter-spacing: 0.5px;
     }
 
+    /* NOW AIRING */
     .now-airing {
       width: 100%;
       max-width: 900px;
       background: rgba(255, 0, 0, 0.08);
       border-top: 1px solid rgba(255, 0, 0, 0.2);
       border-bottom: 1px solid rgba(255, 0, 0, 0.2);
-      padding: 8px 12px;
+      padding: 10px;
       font-size: 13px;
       font-weight: bold;
       text-align: center;
-      letter-spacing: 0.5px;
       margin-bottom: 10px;
     }
 
@@ -141,6 +76,7 @@
       overflow: hidden;
     }
 
+    /* DISCORD */
     .discord-section {
       margin-top: 20px;
       width: 100%;
@@ -153,7 +89,6 @@
     .air-header {
       font-size: 14px;
       font-weight: bold;
-      letter-spacing: 1px;
       margin-bottom: 10px;
     }
 
@@ -165,30 +100,25 @@
 
 <body>
 
-<!-- 🔴 TV ID STING -->
-<div class="id-sting" id="idSting">
-  <div class="id-logo">📺 KATHREID TV</div>
-  <div class="id-live">🔴 LIVE BROADCAST</div>
-</div>
-
-<!-- MAIN CONTENT -->
-<div class="main">
-
+  <!-- TOP BAR -->
   <div class="top-bar">
     <div class="logo">📺 KathReid TV</div>
     <div class="live">🔴 LIVE</div>
   </div>
 
   <div class="tagline">
-    24/7 KathReid Network — Streaming Kathryn Bernardo & James Reid Moments, Music & Films
+    24/7 KathReid Network — Kathryn Bernardo & James Reid Moments, Music & Films
   </div>
 
+  <!-- NOW AIRING -->
   <div class="now-airing" id="nowAiring">
     Loading broadcast schedule...
   </div>
 
+  <!-- PLAYER -->
   <div id="player"></div>
 
+  <!-- DISCORD -->
   <div class="discord-section">
     <div class="air-header">🔴 ON AIR DISCUSSION</div>
 
@@ -196,98 +126,116 @@
       src="https://discord.com/widget?id=YOUR_SERVER_ID&theme=dark"
       width="320"
       height="400"
-      allowtransparency="true"
       frameborder="0"
       sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
     </iframe>
   </div>
 
-</div>
-
-<script>
-  const schedule = [
-    {
-      start: 0,
-      end: 480,
-      title: "Morning Kilig Moments",
-      videos: ["t-v8rWA5Kuw"]
-    },
-    {
-      start: 480,
-      end: 720,
-      title: "Afternoon Interviews",
-      videos: ["aqz-KE-bpKQ"]
-    },
-    {
-      start: 720,
-      end: 1080,
-      title: "Afternoon Films",
-      videos: ["kJQP7kiw5Fk"]
-    },
-    {
-      start: 1080,
-      end: 1320,
-      title: "Evening Kilig Peak",
-      videos: ["t-v8rWA5Kuw"]
-    },
-    {
-      start: 1320,
-      end: 1440,
-      title: "Late Night Comfort Loop",
-      videos: ["aqz-KE-bpKQ"]
-    }
-  ];
-
-  let player;
-
-  function getManilaMinutes() {
-    const now = new Date();
-    const manila = new Date(
-      now.toLocaleString("en-US", { timeZone: "Asia/Manila" })
-    );
-    return manila.getHours() * 60 + manila.getMinutes();
-  }
-
-  function getCurrentShow() {
-    const minutes = getManilaMinutes();
-    return schedule.find(s => minutes >= s.start && minutes < s.end);
-  }
-
-  function loadCurrentShow() {
-    const show = getCurrentShow();
-
-    document.getElementById("nowAiring").innerText =
-      "🎬 NOW AIRING: " + show.title + " (Manila Time)";
-
-    player.loadVideoById(show.videos[0]);
-  }
-
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player("player", {
-      videoId: schedule[0].videos[0],
-      playerVars: {
-        autoplay: 1,
-        controls: 1,
-        rel: 0
+  <script>
+    /* 📺 FULL SCHEDULE */
+    const schedule = [
+      {
+        name: "🌅 MORNING BLOCK",
+        timeText: "6:00 AM – 11:59 AM",
+        start: 360,
+        end: 719,
+        videos: ["t-v8rWA5Kuw", "aqz-KE-bpKQ"]
       },
-      events: {
-        onReady: () => {
-          loadCurrentShow();
-          setInterval(loadCurrentShow, 60000);
-
-          // remove ID sting after load
-          setTimeout(() => {
-            document.getElementById("idSting").style.display = "none";
-          }, 3800);
-        }
+      {
+        name: "☀️ AFTERNOON BLOCK",
+        timeText: "12:00 PM – 5:59 PM",
+        start: 720,
+        end: 1079,
+        videos: ["aqz-KE-bpKQ", "kJQP7kiw5Fk"]
+      },
+      {
+        name: "🌆 EVENING BLOCK",
+        timeText: "6:00 PM – 10:59 PM",
+        start: 1080,
+        end: 1319,
+        videos: ["t-v8rWA5Kuw", "kJQP7kiw5Fk"]
+      },
+      {
+        name: "🌙 LATE NIGHT BLOCK",
+        timeText: "11:00 PM – 5:59 AM",
+        start: 1320,
+        end: 1439,
+        videos: ["aqz-KE-bpKQ", "kJQP7kiw5Fk"]
       }
-    });
-  }
+    ];
 
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.body.appendChild(tag);
-</script>
+    let player;
+    let currentPlaylist = [];
+    let currentIndex = 0;
+
+    function getManilaMinutes() {
+      const now = new Date();
+      const manila = new Date(
+        now.toLocaleString("en-US", { timeZone: "Asia/Manila" })
+      );
+      return manila.getHours() * 60 + manila.getMinutes();
+    }
+
+    function getCurrentBlock() {
+      const minutes = getManilaMinutes();
+      return schedule.find(s => minutes >= s.start && minutes < s.end);
+    }
+
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    function buildPlaylist(block) {
+      currentPlaylist = shuffle([...block.videos]);
+      currentIndex = 0;
+    }
+
+    function playNext() {
+      const block = getCurrentBlock();
+
+      if (!currentPlaylist.length) {
+        buildPlaylist(block);
+      }
+
+      const videoId = currentPlaylist[currentIndex];
+
+      document.getElementById("nowAiring").innerText =
+        `${block.name} (${block.timeText})`;
+
+      player.loadVideoById(videoId);
+
+      currentIndex++;
+
+      if (currentIndex >= currentPlaylist.length) {
+        buildPlaylist(block);
+      }
+    }
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player("player", {
+        videoId: schedule[0].videos[0],
+        playerVars: {
+          autoplay: 1,
+          controls: 1,
+          rel: 0
+        },
+        events: {
+          onReady: () => {
+            playNext();
+          },
+          onStateChange: (event) => {
+            if (event.data === 0) {
+              playNext();
+            }
+          }
+        }
+      });
+    }
+
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  </script>
 
 </body>
 </html>
