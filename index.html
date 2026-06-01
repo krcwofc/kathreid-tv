@@ -16,14 +16,12 @@
     align-items: center;
   }
 
-  /* TOP BAR */
   .top-bar {
     width: 100%;
     max-width: 900px;
     display: flex;
     justify-content: space-between;
     padding: 12px;
-    box-sizing: border-box;
   }
 
   .logo { font-weight: bold; }
@@ -49,7 +47,6 @@
     margin-top: -6px;
   }
 
-  /* NOW AIRING */
   .now-airing {
     width: 100%;
     max-width: 900px;
@@ -61,35 +58,31 @@
     font-weight: bold;
   }
 
-  /* PLAYER */
   #player {
     width: 100%;
     max-width: 900px;
     aspect-ratio: 16/9;
   }
 
-  /* TV GUIDE */
   .tv-guide {
     width: 100%;
     max-width: 900px;
     margin-top: 20px;
     background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
     padding: 10px;
   }
 
   .guide-title {
-    font-weight: bold;
-    font-size: 13px;
     text-align: center;
+    font-size: 13px;
+    font-weight: bold;
     margin-bottom: 10px;
   }
 
   .guide-box {
     max-height: 260px;
     overflow-y: auto;
-    padding-right: 5px;
   }
 
   .guide-item {
@@ -97,8 +90,8 @@
     justify-content: space-between;
     padding: 8px;
     font-size: 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
     opacity: 0.6;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
 
   .guide-item.active {
@@ -112,57 +105,9 @@
     opacity: 0.9;
   }
 
-  /* 📡 DISCORD LIVE CHAT MODE */
-  .discord-section {
-    margin-top: 20px;
-    width: 100%;
-    max-width: 900px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .air-header {
-    font-size: 14px;
+  .ad-banner {
+    color: #ffcc00;
     font-weight: bold;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .onair-dot {
-    width: 8px;
-    height: 8px;
-    background: red;
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-  }
-
-  .chat-context {
-    font-size: 11px;
-    opacity: 0.7;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-
-  .chat-toggle {
-    margin-bottom: 10px;
-    font-size: 11px;
-    padding: 4px 8px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  iframe {
-    border-radius: 10px;
-    transition: all 0.3s ease;
-  }
-
-  .collapsed iframe {
-    display: none;
   }
 </style>
 </head>
@@ -182,42 +127,17 @@
 
 <div id="player"></div>
 
-<!-- TV GUIDE -->
 <div class="tv-guide">
   <div class="guide-title">📺 TV GUIDE</div>
   <div class="guide-box" id="guideContent"></div>
 </div>
 
-<!-- 📡 DISCORD LIVE CHAT -->
-<div class="discord-section" id="discordBox">
-
-  <div class="air-header">
-    <span class="onair-dot"></span>
-    ON AIR DISCUSSION
-  </div>
-
-  <div class="chat-context" id="chatContext">
-    Syncing with current broadcast...
-  </div>
-
-  <div class="chat-toggle" onclick="toggleChat()">
-    Toggle Chat View
-  </div>
-
-  <iframe
-    src="https://discord.com/widget?id=YOUR_SERVER_ID&theme=dark"
-    width="320"
-    height="400"
-    frameborder="0"
-    sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
-  </iframe>
-
-</div>
-
 <script>
 /* =========================
-   📺 HYBRID ENGINE
+   📺 HYBRID + COMMERCIAL ENGINE
 ========================= */
+
+const COMMERCIAL_VIDEO = "YOUR_SOMEONE_SOMEDAY_TRAILER_ID";
 
 const schedule = [
   {
@@ -256,9 +176,11 @@ const schedule = [
 ];
 
 let player;
-let playlist=[];
-let index=0;
+let playlist = [];
+let index = 0;
+let hasSynced = false;
 
+/* 🇵🇭 time */
 function getMinutes(){
   const now=new Date();
   const m=new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
@@ -284,8 +206,13 @@ function getSlot(){
 function shuffle(a){return a.sort(()=>Math.random()-0.5);}
 
 function build(slot){
-  playlist=shuffle([...slot.videos]);
-  index=0;
+  playlist = shuffle([...slot.videos]);
+  index = 0;
+}
+
+/* 📢 COMMERCIAL INSERTION LOGIC */
+function shouldPlayAd(i){
+  return i === 2; // plays after 2 videos
 }
 
 function playNext(){
@@ -294,24 +221,26 @@ function playNext(){
 
   if(!playlist.length) build(slot);
 
-  const vid=playlist[index];
+  let vid;
 
-  document.getElementById("nowAiring").innerText=
-    `${data.block} • ${slot.label}`;
-
-  updateChatContext(data.block, slot.label);
+  /* 🎬 insert commercial */
+  if(shouldPlayAd(index)){
+    vid = COMMERCIAL_VIDEO;
+    document.getElementById("nowAiring").innerText =
+      `${data.block} • 📢 COMMERCIAL BREAK (Someone, Someday)`;
+  } else {
+    vid = playlist[index];
+    document.getElementById("nowAiring").innerText =
+      `${data.block} • ${slot.label}`;
+  }
 
   player.loadVideoById(vid);
 
   index++;
-  if(index>=playlist.length) build(slot);
+
+  if(index >= playlist.length) build(slot);
 
   renderGuide();
-}
-
-function updateChatContext(block,label){
-  document.getElementById("chatContext").innerText=
-    `Watching: ${block} • ${label}`;
 }
 
 /* TV GUIDE */
@@ -354,11 +283,6 @@ function format(m){
   let ampm=h>=12?"PM":"AM";
   h=h%12||12;
   return `${h}:${String(min).padStart(2,'0')} ${ampm}`;
-}
-
-/* toggle chat */
-function toggleChat(){
-  document.getElementById("discordBox").classList.toggle("collapsed");
 }
 
 /* YouTube */
