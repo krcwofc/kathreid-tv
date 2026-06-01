@@ -1,241 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KathReid TV - 24/7 Broadcast</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KathReid TV - Hybrid Broadcast Engine</title>
 
-  <style>
-    body {
-      margin: 0;
-      background: #0b0b0f;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<style>
+  body {
+    margin: 0;
+    background: #0b0b0f;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    /* TOP BAR */
-    .top-bar {
-      width: 100%;
-      max-width: 900px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      box-sizing: border-box;
-    }
+  /* TOP BAR */
+  .top-bar {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    box-sizing: border-box;
+  }
 
-    .logo {
-      font-size: 18px;
-      font-weight: bold;
-    }
+  .logo { font-weight: bold; }
 
-    .live {
-      background: red;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: bold;
-      animation: pulse 1.5s infinite;
-    }
+  .live {
+    background: red;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    animation: pulse 1.5s infinite;
+  }
 
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
 
-    .tagline {
-      font-size: 12px;
-      opacity: 0.7;
-      text-align: center;
-      margin-top: -6px;
-    }
+  .tagline {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: -6px;
+    text-align: center;
+  }
 
-    /* NOW AIRING */
-    .now-airing {
-      width: 100%;
-      max-width: 900px;
-      background: rgba(255, 0, 0, 0.08);
-      border-top: 1px solid rgba(255, 0, 0, 0.2);
-      border-bottom: 1px solid rgba(255, 0, 0, 0.2);
-      padding: 10px;
-      font-size: 13px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 10px;
-    }
+  /* NOW AIRING */
+  .now-airing {
+    width: 100%;
+    max-width: 900px;
+    padding: 10px;
+    background: rgba(255,0,0,0.08);
+    border-bottom: 1px solid rgba(255,0,0,0.2);
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+  }
 
-    #player {
-      width: 100%;
-      max-width: 900px;
-      aspect-ratio: 16/9;
-      border-radius: 8px;
-      overflow: hidden;
-    }
+  /* PLAYER */
+  #player {
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 16/9;
+  }
 
-    /* DISCORD */
-    .discord-section {
-      margin-top: 20px;
-      width: 100%;
-      max-width: 900px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+  /* TV GUIDE */
+  .tv-guide {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px;
+  }
 
-    .air-header {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+  .guide-title {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-    iframe {
-      border-radius: 8px;
-    }
-  </style>
+  .guide-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    opacity: 0.6;
+  }
+
+  .guide-item.active {
+    background: rgba(255,0,0,0.15);
+    border-left: 3px solid red;
+    opacity: 1;
+  }
+
+  .guide-item.next {
+    background: rgba(255,255,255,0.05);
+    opacity: 0.9;
+  }
+
+</style>
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <div class="logo">📺 KathReid TV</div>
-    <div class="live">🔴 LIVE</div>
-  </div>
+<div class="top-bar">
+  <div class="logo">📺 KathReid TV</div>
+  <div class="live">🔴 LIVE</div>
+</div>
 
-  <div class="tagline">
-    24/7 KathReid Network — Kathryn Bernardo & James Reid Moments, Music & Films
-  </div>
+<div class="tagline">
+  24/7 KathReid Network — Kathryn Bernardo & James Reid Moments, Music & Films
+</div>
 
-  <!-- NOW AIRING -->
-  <div class="now-airing" id="nowAiring">
-    Loading broadcast schedule...
-  </div>
+<div class="now-airing" id="nowAiring">Loading broadcast...</div>
 
-  <!-- PLAYER -->
-  <div id="player"></div>
+<div id="player"></div>
 
-  <!-- DISCORD -->
-  <div class="discord-section">
-    <div class="air-header">🔴 ON AIR DISCUSSION</div>
+<!-- TV GUIDE -->
+<div class="tv-guide">
+  <div class="guide-title">📺 TV GUIDE</div>
+  <div id="guideContent"></div>
+</div>
 
-    <iframe
-      src="https://discord.com/widget?id=YOUR_SERVER_ID&theme=dark"
-      width="320"
-      height="400"
-      frameborder="0"
-      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
-    </iframe>
-  </div>
+<script>
+/* =========================
+   📺 HYBRID TV SCHEDULE
+========================= */
 
-  <script>
-    /* 📺 FULL SCHEDULE */
-    const schedule = [
-      {
-        name: "🌅 MORNING BLOCK",
-        timeText: "6:00 AM – 11:59 AM",
-        start: 360,
-        end: 719,
-        videos: ["t-v8rWA5Kuw", "aqz-KE-bpKQ"]
-      },
-      {
-        name: "☀️ AFTERNOON BLOCK",
-        timeText: "12:00 PM – 5:59 PM",
-        start: 720,
-        end: 1079,
-        videos: ["aqz-KE-bpKQ", "kJQP7kiw5Fk"]
-      },
-      {
-        name: "🌆 EVENING BLOCK",
-        timeText: "6:00 PM – 10:59 PM",
-        start: 1080,
-        end: 1319,
-        videos: ["t-v8rWA5Kuw", "kJQP7kiw5Fk"]
-      },
-      {
-        name: "🌙 LATE NIGHT BLOCK",
-        timeText: "11:00 PM – 5:59 AM",
-        start: 1320,
-        end: 1439,
-        videos: ["aqz-KE-bpKQ", "kJQP7kiw5Fk"]
-      }
-    ];
+const schedule = [
+  {
+    block: "🌅 MORNING",
+    slots: [
+      { start: 360, end: 480, label: "6–8 AM James Songs", videos: ["t-v8rWA5Kuw"] },
+      { start: 480, end: 600, label: "8–10 AM Kathryn Movies", videos: ["aqz-KE-bpKQ"] },
+      { start: 600, end: 720, label: "10–12 AM KathReid Edits", videos: ["kJQP7kiw5Fk"] }
+    ]
+  },
+  {
+    block: "☀️ AFTERNOON",
+    slots: [
+      { start: 720, end: 840, label: "12–2 PM Interviews", videos: ["aqz-KE-bpKQ"] },
+      { start: 840, end: 960, label: "2–4 PM Updates", videos: ["t-v8rWA5Kuw"] },
+      { start: 960, end: 1080, label: "4–6 PM James Movies", videos: ["kJQP7kiw5Fk"] }
+    ]
+  },
+  {
+    block: "🌆 EVENING",
+    slots: [
+      { start: 1080, end: 1200, label: "6–8 PM Kilig Edits", videos: ["t-v8rWA5Kuw"] },
+      { start: 1200, end: 1320, label: "8–10 PM Kathryn Movies", videos: ["aqz-KE-bpKQ"] },
+      { start: 1320, end: 1380, label: "10–11 PM Interviews", videos: ["kJQP7kiw5Fk"] }
+    ]
+  },
+  {
+    block: "🌙 LATE NIGHT",
+    slots: [
+      { start: 1380, end: 1440, label: "11–12 AM Comfort Loop", videos: ["t-v8rWA5Kuw"] }
+    ]
+  }
+];
 
-    let player;
-    let currentPlaylist = [];
-    let currentIndex = 0;
+let player;
+let playlist = [];
+let index = 0;
 
-    function getManilaMinutes() {
-      const now = new Date();
-      const manila = new Date(
-        now.toLocaleString("en-US", { timeZone: "Asia/Manila" })
-      );
-      return manila.getHours() * 60 + manila.getMinutes();
-    }
+/* 🇵🇭 Manila time */
+function getMinutes() {
+  const now = new Date();
+  const m = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
+  return m.getHours()*60 + m.getMinutes();
+}
 
-    function getCurrentBlock() {
-      const minutes = getManilaMinutes();
-      return schedule.find(s => minutes >= s.start && minutes < s.end);
-    }
-
-    function shuffle(arr) {
-      return arr.sort(() => Math.random() - 0.5);
-    }
-
-    function buildPlaylist(block) {
-      currentPlaylist = shuffle([...block.videos]);
-      currentIndex = 0;
-    }
-
-    function playNext() {
-      const block = getCurrentBlock();
-
-      if (!currentPlaylist.length) {
-        buildPlaylist(block);
-      }
-
-      const videoId = currentPlaylist[currentIndex];
-
-      document.getElementById("nowAiring").innerText =
-        `${block.name} (${block.timeText})`;
-
-      player.loadVideoById(videoId);
-
-      currentIndex++;
-
-      if (currentIndex >= currentPlaylist.length) {
-        buildPlaylist(block);
+/* find active slot */
+function getSlot() {
+  const mins = getMinutes();
+  for (const b of schedule) {
+    for (const s of b.slots) {
+      if (mins >= s.start && mins < s.end) {
+        return { block: b.block, slot: s };
       }
     }
+  }
+}
 
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player("player", {
-        videoId: schedule[0].videos[0],
-        playerVars: {
-          autoplay: 1,
-          controls: 1,
-          rel: 0
-        },
-        events: {
-          onReady: () => {
-            playNext();
-          },
-          onStateChange: (event) => {
-            if (event.data === 0) {
-              playNext();
-            }
-          }
+/* shuffle */
+function shuffle(a){
+  return a.sort(()=>Math.random()-0.5);
+}
+
+/* build playlist */
+function build(slot){
+  playlist = shuffle([...slot.videos]);
+  index = 0;
+}
+
+/* play next video */
+function playNext(){
+  const data = getSlot();
+  const slot = data.slot;
+
+  if(!playlist.length) build(slot);
+
+  const vid = playlist[index];
+
+  document.getElementById("nowAiring").innerText =
+    `${data.block} • ${slot.label}`;
+
+  player.loadVideoById(vid);
+
+  index++;
+  if(index >= playlist.length) build(slot);
+
+  renderGuide();
+}
+
+/* TV GUIDE */
+function getAllSlots(){
+  let all = [];
+  schedule.forEach(b=>{
+    b.slots.forEach(s=>{
+      all.push({block:b.block, ...s});
+    });
+  });
+  return all.sort((a,b)=>a.start-b.start);
+}
+
+function renderGuide(){
+  const slots = getAllSlots();
+  const now = getMinutes();
+
+  let html = "";
+
+  slots.forEach(s=>{
+    let cls = "guide-item";
+
+    if(now >= s.start && now < s.end) cls = "guide-item active";
+    else if(s.start > now) cls = "guide-item next";
+
+    html += `
+      <div class="${cls}">
+        <span>${s.label}</span>
+        <span>${formatTime(s.start)} - ${formatTime(s.end)}</span>
+      </div>
+    `;
+  });
+
+  document.getElementById("guideContent").innerHTML = html;
+}
+
+/* time format */
+function formatTime(mins){
+  let h = Math.floor(mins/60);
+  let m = mins%60;
+  let ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+/* YouTube API */
+function onYouTubeIframeAPIReady(){
+  player = new YT.Player("player", {
+    videoId: "t-v8rWA5Kuw",
+    playerVars:{ autoplay:1, controls:1, rel:0 },
+    events:{
+      onReady: ()=>{
+        playNext();
+        renderGuide();
+        setInterval(renderGuide, 60000);
+      },
+      onStateChange: (e)=>{
+        if(e.data === 0){
+          playNext();
         }
-      });
+      }
     }
+  });
+}
 
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-  </script>
+const tag=document.createElement("script");
+tag.src="https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+</script>
 
 </body>
 </html>
