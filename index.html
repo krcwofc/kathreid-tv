@@ -16,6 +16,69 @@
       align-items: center;
     }
 
+    /* 🔴 TV ID STING OVERLAY */
+    .id-sting {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeOut 1s ease 3.5s forwards;
+    }
+
+    .id-logo {
+      font-size: 34px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      animation: glow 1s infinite alternate;
+    }
+
+    .id-live {
+      margin-top: 10px;
+      font-size: 14px;
+      color: red;
+      font-weight: bold;
+      animation: blink 0.6s infinite;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px red; }
+      to { text-shadow: 0 0 25px red; }
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.2; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    /* MAIN CONTENT FADE IN */
+    .main {
+      opacity: 0;
+      animation: showMain 1s ease 3.8s forwards;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @keyframes showMain {
+      to { opacity: 1; }
+    }
+
     /* TOP BAR */
     .top-bar {
       width: 100%;
@@ -48,7 +111,6 @@
       100% { opacity: 1; }
     }
 
-    /* UPDATED TAGLINE (NETWORK STYLE) */
     .tagline {
       font-size: 12px;
       opacity: 0.7;
@@ -57,7 +119,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* NOW AIRING */
     .now-airing {
       width: 100%;
       max-width: 900px;
@@ -70,20 +131,16 @@
       text-align: center;
       letter-spacing: 0.5px;
       margin-bottom: 10px;
-      transition: opacity 0.6s ease;
     }
 
-    /* PLAYER */
     #player {
       width: 100%;
       max-width: 900px;
       aspect-ratio: 16/9;
       border-radius: 8px;
       overflow: hidden;
-      transition: opacity 0.6s ease;
     }
 
-    /* DISCORD */
     .discord-section {
       margin-top: 20px;
       width: 100%;
@@ -108,26 +165,30 @@
 
 <body>
 
-  <!-- TOP BAR -->
+<!-- 🔴 TV ID STING -->
+<div class="id-sting" id="idSting">
+  <div class="id-logo">📺 KATHREID TV</div>
+  <div class="id-live">🔴 LIVE BROADCAST</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
   <div class="top-bar">
     <div class="logo">📺 KathReid TV</div>
     <div class="live">🔴 LIVE</div>
   </div>
 
-  <!-- UPDATED NETWORK TAGLINE -->
   <div class="tagline">
     24/7 KathReid Network — Streaming Kathryn Bernardo & James Reid Moments, Music & Films
   </div>
 
-  <!-- NOW AIRING -->
   <div class="now-airing" id="nowAiring">
     Loading broadcast schedule...
   </div>
 
-  <!-- PLAYER -->
   <div id="player"></div>
 
-  <!-- DISCORD -->
   <div class="discord-section">
     <div class="air-header">🔴 ON AIR DISCUSSION</div>
 
@@ -141,86 +202,92 @@
     </iframe>
   </div>
 
-  <script>
-    // 📺 MANILA-BASED BROADCAST SCHEDULE
-    const schedule = [
-      {
-        start: 0,
-        end: 480,
-        title: "Morning Kilig Moments (Edits & Soft Scenes)",
-        videos: ["t-v8rWA5Kuw"]
-      },
-      {
-        start: 480,
-        end: 720,
-        title: "Afternoon Interviews (Kathryn & James Features)",
-        videos: ["aqz-KE-bpKQ"]
-      },
-      {
-        start: 720,
-        end: 1080,
-        title: "Afternoon Films (Movies & Highlights)",
-        videos: ["kJQP7kiw5Fk"]
-      },
-      {
-        start: 1080,
-        end: 1320,
-        title: "Evening Kilig Peak (Emotional Moments & Edits)",
-        videos: ["t-v8rWA5Kuw"]
-      },
-      {
-        start: 1320,
-        end: 1440,
-        title: "Late Night Comfort Loop (Music & Replays)",
-        videos: ["aqz-KE-bpKQ"]
-      }
-    ];
+</div>
 
-    let player;
-
-    function getManilaMinutes() {
-      const now = new Date();
-      const manila = new Date(
-        now.toLocaleString("en-US", { timeZone: "Asia/Manila" })
-      );
-      return manila.getHours() * 60 + manila.getMinutes();
+<script>
+  const schedule = [
+    {
+      start: 0,
+      end: 480,
+      title: "Morning Kilig Moments",
+      videos: ["t-v8rWA5Kuw"]
+    },
+    {
+      start: 480,
+      end: 720,
+      title: "Afternoon Interviews",
+      videos: ["aqz-KE-bpKQ"]
+    },
+    {
+      start: 720,
+      end: 1080,
+      title: "Afternoon Films",
+      videos: ["kJQP7kiw5Fk"]
+    },
+    {
+      start: 1080,
+      end: 1320,
+      title: "Evening Kilig Peak",
+      videos: ["t-v8rWA5Kuw"]
+    },
+    {
+      start: 1320,
+      end: 1440,
+      title: "Late Night Comfort Loop",
+      videos: ["aqz-KE-bpKQ"]
     }
+  ];
 
-    function getCurrentShow() {
-      const minutes = getManilaMinutes();
-      return schedule.find(s => minutes >= s.start && minutes < s.end);
-    }
+  let player;
 
-    function loadCurrentShow() {
-      const show = getCurrentShow();
+  function getManilaMinutes() {
+    const now = new Date();
+    const manila = new Date(
+      now.toLocaleString("en-US", { timeZone: "Asia/Manila" })
+    );
+    return manila.getHours() * 60 + manila.getMinutes();
+  }
 
-      document.getElementById("nowAiring").innerText =
-        "🎬 NOW AIRING: " + show.title + " (Manila Time)";
+  function getCurrentShow() {
+    const minutes = getManilaMinutes();
+    return schedule.find(s => minutes >= s.start && minutes < s.end);
+  }
 
-      player.loadVideoById(show.videos[0]);
-    }
+  function loadCurrentShow() {
+    const show = getCurrentShow();
 
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player("player", {
-        videoId: schedule[0].videos[0],
-        playerVars: {
-          autoplay: 1,
-          controls: 1,
-          rel: 0
-        },
-        events: {
-          onReady: () => {
-            loadCurrentShow();
-            setInterval(loadCurrentShow, 60000);
-          }
+    document.getElementById("nowAiring").innerText =
+      "🎬 NOW AIRING: " + show.title + " (Manila Time)";
+
+    player.loadVideoById(show.videos[0]);
+  }
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player("player", {
+      videoId: schedule[0].videos[0],
+      playerVars: {
+        autoplay: 1,
+        controls: 1,
+        rel: 0
+      },
+      events: {
+        onReady: () => {
+          loadCurrentShow();
+          setInterval(loadCurrentShow, 60000);
+
+          // remove ID sting after load
+          setTimeout(() => {
+            document.getElementById("idSting").style.display = "none";
+          }, 3800);
         }
-      });
-    }
+      }
+    });
+  }
 
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-  </script>
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.body.appendChild(tag);
+</script>
 
 </body>
 </html>
