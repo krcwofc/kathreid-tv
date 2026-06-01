@@ -252,13 +252,13 @@
 
     💞 KathReid Edits<br>
     🎬 Someone, Someday Updates<br>
-    🎵 James Reid Music<br>
-    📺 Kathryn Bernardo Movie Moments
+    🎵 James Reid Music <br>
+    📺 Kathryn Bernardo Film/TV Moments
 
     <br><br>
 
     <a
-      href="YOUR_DISCORD_INVITE_LINK"
+      href="https://discord.gg/ZyJ32BetA"
       target="_blank"
       class="join-btn">
       JOIN COMMUNITY
@@ -271,8 +271,7 @@
   <script>
 
 /* =========================
-   🎬 YOUR FULL VIDEO LIBRARY
-   (PRESERVED FROM YOUR CODE)
+   🎬 FULL VIDEO LIBRARY
 ========================= */
 
 const schedule = [
@@ -295,7 +294,8 @@ const schedule = [
         end: 600,
         label: "8–10 AM Kathryn's Blockbuster Movies 🎬",
         videos: [
-          "CVYsmIbPBVM","SureiNbQdtQ","972BAlRFDB8","mhE3EfdYJrA"
+          "CVYsmIbPBVM","SureiNbQdtQ","972BAlRFDB8",
+          "mhE3EfdYJrA", "BvMJ0fNzIok"
         ]
       },
       {
@@ -338,7 +338,7 @@ const schedule = [
       {
         start: 960,
         end: 1080,
-        label: "4–6 PM James' Blockbuster Movies 🎬",
+        label: "4–6 PM James' TV & Movies 🎬",
         videos: [
           "Mes4k3QQtCo"
         ]
@@ -461,11 +461,22 @@ function shuffle(arr){
   return [...arr].sort(()=>Math.random()-0.5);
 }
 
-function build(slot){
+let playedSet = new Set();
+
+function build(slot) {
+  const promo = "t-v8rWA5Kuw";
+
+  // keep a rotating shuffled queue
   playlist = shuffle(slot.videos);
+
+  // ALWAYS inject promo at least once per cycle
+  if (!playlist.includes(promo)) {
+    playlist.splice(1, 0, promo); // second position
+  }
+
   index = 0;
 }
-
+    
 function getGlobalOffset(duration){
   const now = Math.floor(Date.now() / 1000);
 
@@ -492,24 +503,25 @@ function playNext(){
 
   const vid = playlist[index % playlist.length];
 
-  document.getElementById("nowAiring").innerText =
-    `${data.block} • ${slot.label}`;
+document.getElementById("nowAiring").innerText =
+  `${data.block} • ${slot.label}`;
 
-  let startTime = 0;
+let startTime = 0;
 
-  // 🟢 ONLY FIRST VIDEO IN SLOT uses time offset
-  if (slotJustChanged) {
-    const duration = player.getDuration();
-    startTime = getGlobalOffset(duration);
-    slotJustChanged = false;
-  }
+// only FIRST video in slot gets offset
+if (slotJustChanged && index === 0) {
+  const duration = player.getDuration();
+  startTime = getGlobalOffset(duration);
+  slotJustChanged = false;
+}
 
-  player.loadVideoById({
-    videoId: vid,
-    startSeconds: startTime
-  });
+player.loadVideoById({
+  videoId: vid,
+  startSeconds: startTime
+});
 
-  index++;
+index++;
+  
   renderGuide();
 }
 
