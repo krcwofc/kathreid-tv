@@ -45,8 +45,8 @@
   .tagline {
     font-size: 12px;
     opacity: 0.7;
-    margin-top: -6px;
     text-align: center;
+    margin-top: -6px;
   }
 
   /* NOW AIRING */
@@ -86,6 +86,12 @@
     margin-bottom: 10px;
   }
 
+  .guide-box {
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+
   .guide-item {
     display: flex;
     justify-content: space-between;
@@ -106,6 +112,58 @@
     opacity: 0.9;
   }
 
+  /* 📡 DISCORD LIVE CHAT MODE */
+  .discord-section {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .air-header {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .onair-dot {
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  .chat-context {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .chat-toggle {
+    margin-bottom: 10px;
+    font-size: 11px;
+    padding: 4px 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  iframe {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .collapsed iframe {
+    display: none;
+  }
 </style>
 </head>
 
@@ -127,12 +185,38 @@
 <!-- TV GUIDE -->
 <div class="tv-guide">
   <div class="guide-title">📺 TV GUIDE</div>
-  <div id="guideContent"></div>
+  <div class="guide-box" id="guideContent"></div>
+</div>
+
+<!-- 📡 DISCORD LIVE CHAT -->
+<div class="discord-section" id="discordBox">
+
+  <div class="air-header">
+    <span class="onair-dot"></span>
+    ON AIR DISCUSSION
+  </div>
+
+  <div class="chat-context" id="chatContext">
+    Syncing with current broadcast...
+  </div>
+
+  <div class="chat-toggle" onclick="toggleChat()">
+    Toggle Chat View
+  </div>
+
+  <iframe
+    src="https://discord.com/widget?id=YOUR_SERVER_ID&theme=dark"
+    width="320"
+    height="400"
+    frameborder="0"
+    sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+  </iframe>
+
 </div>
 
 <script>
 /* =========================
-   📺 HYBRID TV SCHEDULE
+   📺 HYBRID ENGINE
 ========================= */
 
 const schedule = [
@@ -163,123 +247,133 @@ const schedule = [
   {
     block: "🌙 LATE NIGHT",
     slots: [
-      { start: 1380, end: 1440, label: "11–12 AM Comfort Loop", videos: ["t-v8rWA5Kuw"] }
+      { start: 1320, end: 1380, label: "11 PM – 12 AM Comfort Loop", videos: ["t-v8rWA5Kuw"] },
+      { start: 1380, end: 120, label: "12 AM – 2 AM Edits Loop", videos: ["kJQP7kiw5Fk"] },
+      { start: 120, end: 240, label: "2 AM – 4 AM Highlights", videos: ["aqz-KE-bpKQ"] },
+      { start: 240, end: 360, label: "4 AM – 6 AM Soft Reset", videos: ["t-v8rWA5Kuw"] }
     ]
   }
 ];
 
 let player;
-let playlist = [];
-let index = 0;
+let playlist=[];
+let index=0;
 
-/* 🇵🇭 Manila time */
-function getMinutes() {
-  const now = new Date();
-  const m = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
-  return m.getHours()*60 + m.getMinutes();
+function getMinutes(){
+  const now=new Date();
+  const m=new Date(now.toLocaleString("en-US",{timeZone:"Asia/Manila"}));
+  return m.getHours()*60+m.getMinutes();
 }
 
-/* find active slot */
-function getSlot() {
-  const mins = getMinutes();
-  for (const b of schedule) {
-    for (const s of b.slots) {
-      if (mins >= s.start && mins < s.end) {
-        return { block: b.block, slot: s };
+function inSlot(now,start,end){
+  if(start<end) return now>=start&&now<end;
+  return now>=start||now<end;
+}
+
+function getSlot(){
+  const now=getMinutes();
+  for(const b of schedule){
+    for(const s of b.slots){
+      if(inSlot(now,s.start,s.end)){
+        return {block:b.block,slot:s};
       }
     }
   }
 }
 
-/* shuffle */
-function shuffle(a){
-  return a.sort(()=>Math.random()-0.5);
-}
+function shuffle(a){return a.sort(()=>Math.random()-0.5);}
 
-/* build playlist */
 function build(slot){
-  playlist = shuffle([...slot.videos]);
-  index = 0;
+  playlist=shuffle([...slot.videos]);
+  index=0;
 }
 
-/* play next video */
 function playNext(){
-  const data = getSlot();
-  const slot = data.slot;
+  const data=getSlot();
+  const slot=data.slot;
 
   if(!playlist.length) build(slot);
 
-  const vid = playlist[index];
+  const vid=playlist[index];
 
-  document.getElementById("nowAiring").innerText =
+  document.getElementById("nowAiring").innerText=
     `${data.block} • ${slot.label}`;
+
+  updateChatContext(data.block, slot.label);
 
   player.loadVideoById(vid);
 
   index++;
-  if(index >= playlist.length) build(slot);
+  if(index>=playlist.length) build(slot);
 
   renderGuide();
 }
 
+function updateChatContext(block,label){
+  document.getElementById("chatContext").innerText=
+    `Watching: ${block} • ${label}`;
+}
+
 /* TV GUIDE */
-function getAllSlots(){
-  let all = [];
+function getAll(){
+  let all=[];
   schedule.forEach(b=>{
     b.slots.forEach(s=>{
-      all.push({block:b.block, ...s});
+      all.push({block:b.block,...s});
     });
   });
   return all.sort((a,b)=>a.start-b.start);
 }
 
 function renderGuide(){
-  const slots = getAllSlots();
-  const now = getMinutes();
+  const slots=getAll();
+  const now=getMinutes();
 
-  let html = "";
+  let html="";
 
   slots.forEach(s=>{
-    let cls = "guide-item";
+    let cls="guide-item";
 
-    if(now >= s.start && now < s.end) cls = "guide-item active";
-    else if(s.start > now) cls = "guide-item next";
+    if(inSlot(now,s.start,s.end)) cls="guide-item active";
+    else if(s.start>now) cls="guide-item next";
 
-    html += `
+    html+=`
       <div class="${cls}">
         <span>${s.label}</span>
-        <span>${formatTime(s.start)} - ${formatTime(s.end)}</span>
+        <span>${format(s.start)} - ${format(s.end)}</span>
       </div>
     `;
   });
 
-  document.getElementById("guideContent").innerHTML = html;
+  document.getElementById("guideContent").innerHTML=html;
 }
 
-/* time format */
-function formatTime(mins){
-  let h = Math.floor(mins/60);
-  let m = mins%60;
-  let ampm = h >= 12 ? "PM" : "AM";
-  h = h % 12 || 12;
-  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+function format(m){
+  let h=Math.floor(m/60);
+  let min=m%60;
+  let ampm=h>=12?"PM":"AM";
+  h=h%12||12;
+  return `${h}:${String(min).padStart(2,'0')} ${ampm}`;
 }
 
-/* YouTube API */
+/* toggle chat */
+function toggleChat(){
+  document.getElementById("discordBox").classList.toggle("collapsed");
+}
+
+/* YouTube */
 function onYouTubeIframeAPIReady(){
-  player = new YT.Player("player", {
-    videoId: "t-v8rWA5Kuw",
-    playerVars:{ autoplay:1, controls:1, rel:0 },
+  player=new YT.Player("player",{
+    videoId:"t-v8rWA5Kuw",
+    playerVars:{autoplay:1,controls:1,rel:0},
     events:{
-      onReady: ()=>{
+      onReady:()=>{
         playNext();
         renderGuide();
-        setInterval(renderGuide, 60000);
+        setInterval(renderGuide,60000);
       },
-      onStateChange: (e)=>{
-        if(e.data === 0){
-          playNext();
-        }
+      onStateChange:(e)=>{
+        if(e.data===0) playNext();
       }
     }
   });
@@ -288,7 +382,6 @@ function onYouTubeIframeAPIReady(){
 const tag=document.createElement("script");
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
-
 </script>
 
 </body>
