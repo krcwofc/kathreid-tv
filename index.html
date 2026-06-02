@@ -294,11 +294,17 @@ const schedule = [
         end: 600,
         label: "8–10 AM Kathryn's Blockbuster Movies & Highlights 🎬",
         videos: [
-          "CVYsmIbPBVM","SureiNbQdtQ","972BAlRFDB8",
-          "mhE3EfdYJrA", "BvMJ0fNzIok", "HQKyVnYZ3Lg",
-          "kA9rZp3V0CY", "rVuTRl0sWi4", "CgCCOefMiv8",
-          "VuwmlwcqTlI"
-        ]
+  { id: "CVYsmIbPBVM", type: "movie" },
+  { id: "SureiNbQdtQ", type: "filler" },
+  { id: "972BAlRFDB8", type: "filler" },
+  { id: "mhE3EfdYJrA", type: "filler" },
+  { id: "BvMJ0fNzIok", type: "movie" },
+  { id: "HQKyVnYZ3Lg", type: "movie" },
+  { id: "kA9rZp3V0CY", type: "filler" },
+  { id: "rVuTRl0sWi4", type: "filler" },
+  { id: "CgCCOefMiv8", type: "filler" },
+  { id: "VuwmlwcqTlI", type: "movie" }
+]
       },
       {
         start: 600,
@@ -474,18 +480,39 @@ let playedSet = new Set();
 function build(slot) {
   const promo = "t-v8rWA5Kuw";
 
-  // full shuffled queue
-  let queue = [...slot.videos];
+  let movies = slot.videos.filter(v => v.type === "movie");
+  let fillers = slot.videos.filter(v => v.type === "filler");
 
-  // Fisher-Yates shuffle (better than Math.random sort)
-  for (let i = queue.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [queue[i], queue[j]] = [queue[j], queue[i]];
+  const isMovieSlot = slot.label.includes("Movies");
+
+  let queue = [];
+
+  if (isMovieSlot) {
+
+    // pick ONE movie only
+    const movie = movies[Math.floor(Math.random() * movies.length)];
+
+    // fill rest with ONLY fillers
+    queue = [
+      movie.id,
+      ...fillers.map(v => v.id),
+      ...fillers.map(v => v.id)
+    ];
+
+  } else {
+
+    const normal = slot.videos.map(v => v.id);
+
+    for (let i = normal.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [normal[i], normal[j]] = [normal[j], normal[i]];
+    }
+
+    const insertIndex = Math.floor(Math.random() * normal.length);
+    normal.splice(insertIndex, 0, promo);
+
+    queue = normal;
   }
-
-  // inject promo once per cycle
-  const insertIndex = Math.floor(Math.random() * queue.length);
-  queue.splice(insertIndex, 0, promo);
 
   playlist = queue;
   index = 0;
@@ -505,17 +532,21 @@ function playNext(){
   const data = getSlot();
   const slot = data.slot;
 
-  // detect slot change
+  const isMovieSlot = slot.label.includes("Movies");
+
+  // detect slot change (BUT DO NOT INTERRUPT)
   if (slot.label !== currentSlotLabel) {
     currentSlotLabel = slot.label;
     build(slot);
-    index = 0;              // 🔥 RESET INDEX HERE
+    index = 0;
+
+    // IMPORTANT: do NOT force playNext here anymore
     slotJustChanged = true;
   }
 
   if (!playlist.length) {
     build(slot);
-    index = 0;              // 🔥 ALSO RESET HERE SAFETY
+    index = 0;
   }
 
   const vid = playlist[index % playlist.length];
@@ -525,7 +556,6 @@ function playNext(){
 
   let startTime = 0;
 
-  // only offset first video in slot
   if (slotJustChanged && index === 0) {
     const duration = player.getDuration();
     startTime = getGlobalOffset(duration);
@@ -538,12 +568,6 @@ function playNext(){
   });
 
   index++;
-
-  // 🔥 when playlist ends → rebuild cleanly
-  if (index >= playlist.length) {
-    build(slot);
-    index = 0;   // VERY IMPORTANT
-  }
 
   renderGuide();
 }
@@ -679,14 +703,6 @@ window.addEventListener("scroll", () => {
   }
 });
 
- setInterval(() => {
-  const data = getSlot();
-
-  if (data.slot.label !== currentSlotLabel) {
-    slotJustChanged = true;
-    playNext();
-  }
-}, 30000);
 
 </script>
 
