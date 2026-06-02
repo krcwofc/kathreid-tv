@@ -607,18 +607,29 @@ function playNext() {
 
   let startTime = 0;
 
-  // ONLY sync movie once per slot
-  if (slotJustChanged && index === 0 && currentIsMovieSlot) {
+const duration = player.getDuration();
 
-    const progress = getSlotProgress(slot);
-    const duration = player.getDuration();
+// MOVIE SLOT
+if (slotJustChanged && index === 0 && currentIsMovieSlot) {
 
-    if (duration && progress > 0) {
-      startTime = progress % duration;
-    }
+  const progress = getSlotProgress(slot);
 
-    slotJustChanged = false;
+  if (duration && progress > 0) {
+    startTime = progress % duration;
   }
+
+  slotJustChanged = false;
+}
+
+// NORMAL SLOT
+else if (slotJustChanged && index === 0 && !currentIsMovieSlot) {
+
+  if (duration && duration > 30) {
+    startTime = Math.floor(duration * 0.35);
+  }
+
+  slotJustChanged = false;
+}
 
   player.loadVideoById({
     videoId: vid,
