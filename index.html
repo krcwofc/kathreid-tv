@@ -442,6 +442,9 @@ let lockedMovie = {};
 let player;
 let playlist = [];
 let index = 0;
+    
+let currentSlotKey = "";
+let slotJustChanged = true;
 
 let currentSlotLabel = "";
 
@@ -503,18 +506,15 @@ function build(slot) {
   const movies = slot.videos.filter(v => v.type === "movie");
   const fillers = slot.videos.filter(v => v.type === "filler");
 
-  currentIsMovieSlot = movies.length > 0; // ✅ ADD THIS
+  currentIsMovieSlot = movies.length > 0;
+
+  const slotKey = `${slot.start}-${slot.end}`;
 
   let queue = [];
 
-  // ✅ TRUE movie slot check (not just "has movies")
-  const isMovieSlot = movies.length > 0;
+  if (currentIsMovieSlot) {
 
-  if (isMovieSlot) {
-
-    // 🔥 lock ONE movie per slot (stable per label)
-    const slotKey = slot.start + "-" + slot.end;
-
+    // LOCK ONE MOVIE PER SLOT
     if (!lockedMovie[slotKey]) {
       lockedMovie[slotKey] =
         movies[Math.floor(Math.random() * movies.length)].id;
@@ -522,7 +522,6 @@ function build(slot) {
 
     const movieId = lockedMovie[slotKey];
 
-    // 🎬 movie plays once, fillers loop around it
     queue = [
       movieId,
       ...fillers.map(v => v.id),
@@ -539,12 +538,14 @@ function build(slot) {
       [normal[i], normal[j]] = [normal[j], normal[i]];
     }
 
-    // promo injection
-    normal.splice(
-      Math.floor(Math.random() * normal.length),
-      0,
-      promo
-    );
+    // SAFE promo insert
+    if (normal.length > 3) {
+      normal.splice(
+        Math.floor(Math.random() * normal.length),
+        0,
+        promo
+      );
+    }
 
     queue = normal;
   }
@@ -568,29 +569,43 @@ function playNext(){
   const slot = data.slot;
   
   // detect slot change (BUT DO NOT INTERRUPT)
-  if (slot.label !== currentSlotLabel) {
-    currentSlotLabel = slot.label;
-    build(slot);
-    index = 0;
+  const slotKey = `${slot.start}-${slot.end}`;
 
-    // IMPORTANT: do NOT force playNext here anymore
-    slotJustChanged = true;
-  }
+if (slotKey !== currentSlotKey) {
+  currentSlotKey = slotKey;
+  build(slot);
+  index = 0;
+  slotJustChanged = true;
+}
 
   if (!playlist.length) {
     build(slot);
     index = 0;
   }
 
-  const vid = playlist[index % playlist.length];
-
+const vid = playlist.length
+  ? playlist[index % playlist.length]
+  : "t-v8rWA5Kuw";
+  
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
   let startTime = 0;
 
 if (slotJustChanged && index === 0 && currentIsMovieSlot) {
-  
+
+  const progress = getSlotProgress(slot);
+
+  const movieId = lockedMovie[currentSlotKey];
+
+  const duration = player.getDuration();
+
+  if (movieId && duration && progress > 0) {
+    startTime = progress % duration;
+  }
+
+  slotJustChanged = false;
+}  
   const progress = getSlotProgress(slot);
 
 const movieId = lockedMovie[slot.start + "-" + slot.end];
