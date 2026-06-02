@@ -437,19 +437,17 @@ const schedule = [
 
 /* ========================= */
 
-let currentIsMovieSlot = false;
-let lockedMovie = {};
 let player;
 let playlist = [];
 let index = 0;
-    
-let currentSlotKey = "";
-let slotJustChanged = true;
 
+let lockedMovie = {};
+
+let currentSlotKey = "";
 let currentSlotLabel = "";
 
-    let firstJoin = true;
-    let slotJustChanged = true;
+let currentIsMovieSlot = false;
+let slotJustChanged = true;
 
 function getSlotSeed(slot) {
   // stable number based on time window
@@ -564,60 +562,46 @@ function getGlobalOffset(duration){
   return now % duration;
 }
 
-function playNext(){
+function playNext() {
   const data = getSlot();
   const slot = data.slot;
-  
-  // detect slot change (BUT DO NOT INTERRUPT)
+
   const slotKey = `${slot.start}-${slot.end}`;
 
-if (slotKey !== currentSlotKey) {
-  currentSlotKey = slotKey;
-  build(slot);
-  index = 0;
-  slotJustChanged = true;
-}
+  // detect slot change
+  if (slotKey !== currentSlotKey) {
+    currentSlotKey = slotKey;
+    currentSlotLabel = slot.label;
+
+    build(slot);
+    index = 0;
+    slotJustChanged = true;
+  }
 
   if (!playlist.length) {
     build(slot);
     index = 0;
   }
 
-const vid = playlist.length
-  ? playlist[index % playlist.length]
-  : "t-v8rWA5Kuw";
-  
+  const vid = playlist[index % playlist.length];
+
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
   let startTime = 0;
 
-if (slotJustChanged && index === 0 && currentIsMovieSlot) {
+  // ONLY sync movie once per slot
+  if (slotJustChanged && index === 0 && currentIsMovieSlot) {
 
-  const progress = getSlotProgress(slot);
+    const progress = getSlotProgress(slot);
+    const duration = player.getDuration();
 
-  const movieId = lockedMovie[currentSlotKey];
+    if (duration && progress > 0) {
+      startTime = progress % duration;
+    }
 
-  const duration = player.getDuration();
-
-  if (movieId && duration && progress > 0) {
-    startTime = progress % duration;
+    slotJustChanged = false;
   }
-
-  slotJustChanged = false;
-}  
-  const progress = getSlotProgress(slot);
-
-const movieId = lockedMovie[slot.start + "-" + slot.end];
-  
-  const duration = player.getDuration();
-
-  if (duration && progress > 0) {
-    startTime = progress % duration;
-  }
-
-  slotJustChanged = false;
-}
 
   player.loadVideoById({
     videoId: vid,
