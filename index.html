@@ -437,7 +437,6 @@ const schedule = [
 
 /* ========================= */
 
-let lockedMovie = null;
 let player;
 let playlist = [];
 let index = 0;
@@ -446,6 +445,11 @@ let currentSlotLabel = "";
 
     let firstJoin = true;
     let slotJustChanged = true;
+
+function getSlotSeed(slot) {
+  // stable number based on time window
+  return slot.start + slot.end;
+}
 
 function getMinutes(){
   const now = new Date();
@@ -486,25 +490,23 @@ function build(slot) {
 
   let queue = [];
 
-  const isMovieSlot = movies.length > 0;
+ const isMovieSlot = movies.length > 0;
 
 if (isMovieSlot) {
 
-  // 🔒 LOCK MOVIE FOR THIS SLOT
-  if (!lockedMovie) {
-    lockedMovie = movies[Math.floor(Math.random() * movies.length)];
-  }
+  // 🔥 GLOBAL CONSISTENCY: same movie for everyone
+  const seed = getSlotSeed(slot);
+
+  const movieIndex = seed % movies.length;
+  const movie = movies[movieIndex];
 
   queue = [
-    lockedMovie.id,   // 🎬 always same movie during slot
+    movie.id,                         // 🎬 same movie for ALL viewers
     ...fillers.map(v => v.id),
     ...fillers.map(v => v.id)
   ];
 
 } else {
-
-  // reset lock when leaving movie slot
-  lockedMovie = null;
 
   const normal = slot.videos.map(v => v.id);
 
@@ -518,7 +520,7 @@ if (isMovieSlot) {
 
   queue = normal;
 }
-
+  
   playlist = queue;
   index = 0;
 }
