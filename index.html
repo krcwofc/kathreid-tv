@@ -437,6 +437,7 @@ const schedule = [
 
 /* ========================= */
 
+let lockedMovie = null;
 let player;
 let playlist = [];
 let index = 0;
@@ -480,39 +481,43 @@ let playedSet = new Set();
 function build(slot) {
   const promo = "t-v8rWA5Kuw";
 
-  let movies = slot.videos.filter(v => v.type === "movie");
-  let fillers = slot.videos.filter(v => v.type === "filler");
-
-  const isMovieSlot = slot.label.includes("Movies");
+  const movies = slot.videos.filter(v => v.type === "movie");
+  const fillers = slot.videos.filter(v => v.type === "filler");
 
   let queue = [];
 
-  if (isMovieSlot) {
+  const isMovieSlot = movies.length > 0;
 
-    // pick ONE movie only
-    const movie = movies[Math.floor(Math.random() * movies.length)];
+if (isMovieSlot) {
 
-    // fill rest with ONLY fillers
-    queue = [
-      movie.id,
-      ...fillers.map(v => v.id),
-      ...fillers.map(v => v.id)
-    ];
-
-  } else {
-
-    const normal = slot.videos.map(v => v.id);
-
-    for (let i = normal.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [normal[i], normal[j]] = [normal[j], normal[i]];
-    }
-
-    const insertIndex = Math.floor(Math.random() * normal.length);
-    normal.splice(insertIndex, 0, promo);
-
-    queue = normal;
+  // 🔒 LOCK MOVIE FOR THIS SLOT
+  if (!lockedMovie) {
+    lockedMovie = movies[Math.floor(Math.random() * movies.length)];
   }
+
+  queue = [
+    lockedMovie.id,   // 🎬 always same movie during slot
+    ...fillers.map(v => v.id),
+    ...fillers.map(v => v.id)
+  ];
+
+} else {
+
+  // reset lock when leaving movie slot
+  lockedMovie = null;
+
+  const normal = slot.videos.map(v => v.id);
+
+  for (let i = normal.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [normal[i], normal[j]] = [normal[j], normal[i]];
+  }
+
+  const insertIndex = Math.floor(Math.random() * normal.length);
+  normal.splice(insertIndex, 0, promo);
+
+  queue = normal;
+}
 
   playlist = queue;
   index = 0;
@@ -532,8 +537,8 @@ function playNext(){
   const data = getSlot();
   const slot = data.slot;
 
-  const isMovieSlot = slot.label.includes("Movies");
-
+const isMovieSlot = slot.videos.some(v => v.type === "movie");
+  
   // detect slot change (BUT DO NOT INTERRUPT)
   if (slot.label !== currentSlotLabel) {
     currentSlotLabel = slot.label;
