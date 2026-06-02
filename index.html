@@ -437,6 +437,7 @@ const schedule = [
 
 /* ========================= */
 
+let currentIsMovieSlot = false;
 let lockedMovie = {};
 let player;
 let playlist = [];
@@ -502,20 +503,26 @@ function build(slot) {
   const movies = slot.videos.filter(v => v.type === "movie");
   const fillers = slot.videos.filter(v => v.type === "filler");
 
-  const isMovieSlot = movies.length > 0;
+  currentIsMovieSlot = movies.length > 0; // ✅ ADD THIS
 
   let queue = [];
 
+  // ✅ TRUE movie slot check (not just "has movies")
+  const isMovieSlot = movies.length > 0;
+
   if (isMovieSlot) {
 
-    // 🔥 LOCK movie per slot label
-    if (!lockedMovie[slot.label]) {
-      lockedMovie[slot.label] =
+    // 🔥 lock ONE movie per slot (stable per label)
+    const slotKey = slot.start + "-" + slot.end;
+
+    if (!lockedMovie[slotKey]) {
+      lockedMovie[slotKey] =
         movies[Math.floor(Math.random() * movies.length)].id;
     }
 
-    const movieId = lockedMovie[slot.label];
+    const movieId = lockedMovie[slotKey];
 
+    // 🎬 movie plays once, fillers loop around it
     queue = [
       movieId,
       ...fillers.map(v => v.id),
@@ -526,11 +533,13 @@ function build(slot) {
 
     const normal = slot.videos.map(v => v.id);
 
+    // shuffle
     for (let i = normal.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [normal[i], normal[j]] = [normal[j], normal[i]];
     }
 
+    // promo injection
     normal.splice(
       Math.floor(Math.random() * normal.length),
       0,
@@ -557,8 +566,6 @@ function getGlobalOffset(duration){
 function playNext(){
   const data = getSlot();
   const slot = data.slot;
-
-const isMovieSlot = slot.videos.some(v => v.type === "movie");
   
   // detect slot change (BUT DO NOT INTERRUPT)
   if (slot.label !== currentSlotLabel) {
@@ -582,12 +589,12 @@ const isMovieSlot = slot.videos.some(v => v.type === "movie");
 
   let startTime = 0;
 
-if (slotJustChanged && index === 0 && movies.length > 0) {
-
+if (slotJustChanged && index === 0 && currentIsMovieSlot) {
+  
   const progress = getSlotProgress(slot);
 
-  const movieId = lockedMovie[slot.label];
-
+const movieId = lockedMovie[slot.start + "-" + slot.end];
+  
   const duration = player.getDuration();
 
   if (duration && progress > 0) {
