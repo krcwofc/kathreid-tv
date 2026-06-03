@@ -518,6 +518,19 @@ function shuffle(arr){
 
 let playedSet = new Set();
 
+    function getDaySeed(slotKey) {
+  const now = new Date();
+
+  // daily rotation (UTC day so everyone syncs globally)
+  const day = Math.floor(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate()
+  ) / 86400000);
+
+  return day + slotKey;
+}
+    
 function build(slot) {
   const promo = "t-v8rWA5Kuw";
 
@@ -532,20 +545,17 @@ function build(slot) {
 
   if (currentIsMovieSlot) {
 
-    // LOCK ONE MOVIE PER SLOT
-    if (!lockedMovie[slotKey]) {
+  const seed = getDaySeed(slotKey);
 
-  // only pick FIRST movie in list always
-  lockedMovie[slotKey] = movies[0].id;
+  const movieIndex = seed % movies.length;
+  const movieId = movies[movieIndex].id;
+
+  queue = [
+    movieId,
+    ...fillers.map(v => v.id)
+  ];
 }
-
-    const movieId = lockedMovie[slotKey];
-
-    queue = [
-  movieId,
-  ...fillers.map(v => v.id)
-];
-
+  
   } else {
 
 const normal = slot.videos.map(v =>
