@@ -534,17 +534,17 @@ function build(slot) {
 
     // LOCK ONE MOVIE PER SLOT
     if (!lockedMovie[slotKey]) {
-      lockedMovie[slotKey] =
-        movies[Math.floor(Math.random() * movies.length)].id;
-    }
+
+  // only pick FIRST movie in list always
+  lockedMovie[slotKey] = movies[0].id;
+}
 
     const movieId = lockedMovie[slotKey];
 
     queue = [
-      movieId,
-      ...fillers.map(v => v.id),
-      ...fillers.map(v => v.id)
-    ];
+  movieId,
+  ...fillers.map(v => v.id)
+];
 
   } else {
 
@@ -584,6 +584,7 @@ function getGlobalOffset(duration){
   return now % duration;
 }
 
+    
 function playNext() {
   const data = getSlot();
   const slot = data.slot;
@@ -600,6 +601,11 @@ function playNext() {
     slotJustChanged = true;
   }
 
+  // FORCE SINGLE MOVIE ONLY MODE TRACKING
+if (currentIsMovieSlot) {
+  lockedMovie[currentSlotKey] = lockedMovie[currentSlotKey];
+}
+
   if (!playlist.length) {
     build(slot);
     index = 0;
@@ -610,27 +616,31 @@ function playNext() {
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
-  let startTime = 0;
+ let startTime = 0;
 
-const duration = player.getDuration();
-
-// MOVIE SLOT
+// =======================
+// 🎬 MOVIE BLOCK LOGIC
+// =======================
 if (slotJustChanged && index === 0 && currentIsMovieSlot) {
 
-  const progress = getSlotProgress(slot);
+  // Sync movie globally based on real time progression of slot
+  const progressSeconds = getSlotProgress(slot) * 60;
 
-  if (duration && progress > 0) {
-    startTime = progress % duration;
-  }
+  startTime = progressSeconds % player.getDuration();
 
   slotJustChanged = false;
 }
 
-// NORMAL SLOT
+// =======================
+// 🎭 NORMAL BLOCK LOGIC
+// =======================
 else if (slotJustChanged && index === 0 && !currentIsMovieSlot) {
 
-  if (duration && duration > 30) {
-    startTime = Math.floor(duration * 0.35);
+  // Start mid-first-video ONLY once for broadcast feel
+  const duration = player.getDuration();
+
+  if (duration && duration > 60) {
+    startTime = Math.floor(duration * 0.35); // 35% in
   }
 
   slotJustChanged = false;
