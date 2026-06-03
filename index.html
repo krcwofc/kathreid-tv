@@ -545,30 +545,29 @@ function build(slot) {
 
   if (currentIsMovieSlot) {
 
-  const seed = getDaySeed(slotKey);
+    const seed = getDaySeed(slotKey);
 
-  const movieIndex = seed % movies.length;
-  const movieId = movies[movieIndex].id;
+    const movieIndex = seed % movies.length;
+    const movieId = movies[movieIndex].id;
 
-  queue = [
-    movieId,
-    ...fillers.map(v => v.id)
-  ];
-}
-  
+    queue = [
+      movieId,
+      ...fillers.map(v => v.id)
+    ];
+
   } else {
 
-const normal = slot.videos.map(v =>
-  typeof v === "string" ? v : v.id
-).filter(Boolean);
-    
+    const normal = slot.videos
+      .map(v => typeof v === "string" ? v : v.id)
+      .filter(Boolean);
+
     // shuffle
     for (let i = normal.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [normal[i], normal[j]] = [normal[j], normal[i]];
     }
 
-    // SAFE promo insert
+    // promo insert
     if (normal.length > 3) {
       normal.splice(
         Math.floor(Math.random() * normal.length),
