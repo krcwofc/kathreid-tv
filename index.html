@@ -530,17 +530,18 @@ function shuffle(arr){
 
 let playedSet = new Set();
 
-    function getDaySeed(slotKey) {
+   function getDaySeed(slotKey) {
   const now = new Date();
 
-  // daily rotation (UTC day so everyone syncs globally)
   const day = Math.floor(Date.UTC(
     now.getUTCFullYear(),
     now.getUTCMonth(),
     now.getUTCDate()
   ) / 86400000);
 
-  return day + slotKey;
+  const [start, end] = slotKey.split("-").map(Number);
+
+  return day + start + end;
 }
     
 function build(slot) {
