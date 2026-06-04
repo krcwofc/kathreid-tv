@@ -604,9 +604,7 @@ const movieIndex = Math.abs(seed) % movies.length;
     movieId,
     ...fillers.map(v => v.id)
   ];
-}
-
-  } else {
+} else {
 
     const normal = slot.videos
       .map(v => typeof v === "string" ? v : v.id)
