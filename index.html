@@ -645,12 +645,27 @@ if (currentIsMovieSlot) {
 // =======================
 if (slotJustChanged && index === 0 && currentIsMovieSlot) {
 
-  // Sync movie globally based on real time progression of slot
   const progressSeconds = getSlotProgress(slot) * 60;
 
-  startTime = progressSeconds % player.getDuration();
+  player.loadVideoById(vid);
+
+  setTimeout(() => {
+
+    const duration = player.getDuration();
+
+    if (duration > 0) {
+      player.seekTo(progressSeconds % duration, true);
+    }
+
+  }, 1500);
 
   slotJustChanged = false;
+
+  index++;
+
+  renderGuide();
+
+  return;
 }
 
 // =======================
