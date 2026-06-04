@@ -485,7 +485,7 @@ let player;
 let playlist = [];
 let index = 0;
 
-let lockedMovie = {};
+let dailyMovieLock = {};
 
 let currentSlotKey = "";
 let currentSlotLabel = "";
@@ -570,15 +570,26 @@ function build(slot) {
 
   if (currentIsMovieSlot) {
 
+  const dayKey = new Date().toDateString();
+  const lockKey = `${dayKey}-${slotKey}`;
+
+  // If movie already chosen today, reuse it
+  let movieId = dailyMovieLock[lockKey];
+
+  if (!movieId) {
     const seed = getDaySeed(slotKey);
+const movieIndex = Math.abs(seed) % movies.length;
+    movieId = movies[movieIndex].id;
 
-    const movieIndex = seed % movies.length;
-    const movieId = movies[movieIndex].id;
+    // LOCK IT for the rest of the day
+    dailyMovieLock[lockKey] = movieId;
+  }
 
-    queue = [
-      movieId,
-      ...fillers.map(v => v.id)
-    ];
+  queue = [
+    movieId,
+    ...fillers.map(v => v.id)
+  ];
+}
 
   } else {
 
@@ -624,6 +635,8 @@ function playNext() {
   const slot = data.slot;
 
   const slotKey = `${slot.start}-${slot.end}`;
+  const dayKey = new Date().toDateString();
+  const lockKey = `${dayKey}-${slotKey}`;
 
   // detect slot change
   if (slotKey !== currentSlotKey) {
@@ -634,11 +647,6 @@ function playNext() {
     index = 0;
     slotJustChanged = true;
   }
-
-  // FORCE SINGLE MOVIE ONLY MODE TRACKING
-if (currentIsMovieSlot) {
-  lockedMovie[currentSlotKey] = lockedMovie[currentSlotKey];
-}
 
   if (!playlist.length) {
     build(slot);
@@ -655,7 +663,11 @@ if (currentIsMovieSlot) {
 // =======================
 // 🎬 MOVIE BLOCK LOGIC
 // =======================
-if (slotJustChanged && index === 0 && currentIsMovieSlot) {
+if (
+  slotJustChanged &&
+  index === 0 &&
+  currentIsMovieSlot
+) { 
 
   const progressSeconds = getSlotProgress(slot) * 60;
 
