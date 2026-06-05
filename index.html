@@ -509,6 +509,7 @@ let index = 0;
     let currentMovieId = null;
 let currentFillers = [];
 let dailyMovieLock = {};
+    let movieInProgress = false;
 
 let currentSlotKey = "";
 let currentSlotLabel = "";
@@ -609,10 +610,12 @@ function build(slot) {
   }
 
   currentMovieId = movieId;
-  currentFillers = fillers.map(v => v.id);
+currentFillers = fillers.map(v => v.id);
 
-  playlist = [];
-  return;
+movieInProgress = true;
+
+playlist = [];
+return;
 }
  
  else {
@@ -694,6 +697,16 @@ function playNext() {
   const slot = data.slot;
 
   const slotKey = `${slot.start}-${slot.end}`;
+
+  if (currentIsMovieSlot && movieInProgress) {
+
+  const currentVideo = player.getVideoData()?.video_id;
+
+  if (currentVideo === currentMovieId) {
+    return;
+  }
+
+}
 
   // slot changed
   if (slotKey !== currentSlotKey) {
@@ -824,10 +837,24 @@ function onYouTubeIframeAPIReady(){
         setTimeout(playNext, 800);
       },
       onStateChange:(e)=>{
-        if(e.data === 0){
-          playNext();
-        }
-      },
+
+  if(e.data === YT.PlayerState.ENDED){
+
+    const data = getSlot();
+
+    if(currentIsMovieSlot){
+
+      movieInProgress = false;
+
+      // jump to whatever block should be live now
+      currentSlotKey = "";
+
+    }
+
+    playNext();
+  }
+
+},
       onError:handleError
     }
 
