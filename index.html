@@ -506,6 +506,8 @@ let player;
 let playlist = [];
 let index = 0;
 
+    let currentMovieId = null;
+let currentFillers = [];
 let dailyMovieLock = {};
 
 let currentSlotKey = "";
@@ -589,28 +591,31 @@ function build(slot) {
 
   let queue = [];
 
-  if (currentIsMovieSlot) {
+ if (currentIsMovieSlot) {
 
   const dayKey = new Date().toDateString();
   const lockKey = `${dayKey}-${slotKey}`;
 
-  // If movie already chosen today, reuse it
   let movieId = dailyMovieLock[lockKey];
 
   if (!movieId) {
+
     const seed = getDaySeed(slotKey);
-const movieIndex = Math.abs(seed) % movies.length;
+    const movieIndex = Math.abs(seed) % movies.length;
+
     movieId = movies[movieIndex].id;
 
-    // LOCK IT for the rest of the day
     dailyMovieLock[lockKey] = movieId;
   }
 
-  queue = [
-    movieId,
-    ...fillers.map(v => v.id)
-  ];
-} else {
+  currentMovieId = movieId;
+  currentFillers = fillers.map(v => v.id);
+
+  playlist = [];
+  return;
+}
+ 
+ else {
 
     const normal = slot.videos
       .map(v => typeof v === "string" ? v : v.id)
@@ -636,6 +641,40 @@ const movieIndex = Math.abs(seed) % movies.length;
 
   playlist = queue;
   index = 0;
+}
+
+    function playMovieBroadcast(slot) {
+
+  const slotProgress = getSlotProgress(slot) * 60;
+
+  player.loadVideoById(currentMovieId);
+
+  const waitForDuration = setInterval(() => {
+
+    const duration = player.getDuration();
+
+    if (!duration || duration <= 0) return;
+
+    clearInterval(waitForDuration);
+
+    if (slotProgress < duration) {
+
+      player.seekTo(slotProgress, true);
+
+    } else {
+
+     const fillerTime = slotProgress - duration;
+
+const fillerIndex =
+  Math.floor(fillerTime / 300) %
+  currentFillers.length;
+
+      player.loadVideoById(
+        currentFillers[fillerIndex]
+      );
+    }
+
+  }, 500);
 }
     
 function getGlobalOffset(duration){
@@ -667,54 +706,25 @@ function playNext() {
     slotJustChanged = true;
   }
 
-  if (!playlist.length) {
-    build(slot);
-    index = 0;
-  }
+  if (!currentIsMovieSlot && !playlist.length) {
+  build(slot);
+  index = 0;
+}
 
   const vid = playlist[index % playlist.length];
 
-  document.getElementById("nowAiring").innerText =
-    `${data.block} • ${slot.label}`;
-
  let startTime = 0;
 
-// =======================
-// 🎬 MOVIE BLOCK LOGIC
-// =======================
-if (
-  slotJustChanged &&
-  index === 0 &&
-  currentIsMovieSlot
-) { 
+if (slotJustChanged && index === 0) {
 
-  const progressSeconds = getSlotProgress(slot) * 60;
+  const duration = player.getDuration();
 
-  player.loadVideoById(vid);
-
-  setTimeout(() => {
-
-    const duration = player.getDuration();
-
-    if (duration > 0) {
-      player.seekTo(progressSeconds % duration, true);
-    }
-
-  }, 1500);
+  if (duration && duration > 60) {
+    startTime = Math.floor(duration * 0.35);
+  }
 
   slotJustChanged = false;
-
-  index++;
-
-  renderGuide();
-
-  return;
 }
-
-// =======================
-// 🎭 NORMAL BLOCK LOGIC
-// =======================
-else if (slotJustChanged && index === 0 && !currentIsMovieSlot) {
 
   // Start mid-first-video ONLY once for broadcast feel
   const duration = player.getDuration();
