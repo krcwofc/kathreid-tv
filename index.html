@@ -689,52 +689,62 @@ function getGlobalOffset(duration){
 
     
 function playNext() {
+
   const data = getSlot();
   const slot = data.slot;
 
   const slotKey = `${slot.start}-${slot.end}`;
-  const dayKey = new Date().toDateString();
-  const lockKey = `${dayKey}-${slotKey}`;
 
-  // detect slot change
+  // slot changed
   if (slotKey !== currentSlotKey) {
+
     currentSlotKey = slotKey;
     currentSlotLabel = slot.label;
 
     build(slot);
+
     index = 0;
     slotJustChanged = true;
   }
 
-  if (!currentIsMovieSlot && !playlist.length) {
-  build(slot);
-  index = 0;
-}
+  // MOVIE SLOT
+  if (currentIsMovieSlot) {
+
+    playMovieBroadcast(slot);
+
+    document.getElementById("nowAiring").innerText =
+      `${data.block} • ${slot.label}`;
+
+    renderGuide();
+
+    return;
+  }
+
+  // NORMAL SLOT
+  if (!playlist.length) {
+
+    build(slot);
+    index = 0;
+  }
 
   const vid = playlist[index % playlist.length];
 
- let startTime = 0;
+  let startTime = 0;
 
-if (slotJustChanged && index === 0) {
+  // only first video of slot starts mid-way
+  if (slotJustChanged && index === 0) {
 
-  const duration = player.getDuration();
+    const duration = player.getDuration();
 
-  if (duration && duration > 60) {
-    startTime = Math.floor(duration * 0.35);
+    if (duration && duration > 60) {
+      startTime = Math.floor(duration * 0.35);
+    }
+
+    slotJustChanged = false;
   }
 
-  slotJustChanged = false;
-}
-
-  // Start mid-first-video ONLY once for broadcast feel
-  const duration = player.getDuration();
-
-  if (duration && duration > 60) {
-    startTime = Math.floor(duration * 0.35); // 35% in
-  }
-
-  slotJustChanged = false;
-}
+  document.getElementById("nowAiring").innerText =
+    `${data.block} • ${slot.label}`;
 
   player.loadVideoById({
     videoId: vid,
@@ -745,7 +755,6 @@ if (slotJustChanged && index === 0) {
 
   renderGuide();
 }
-
 function handleError(){
   index++;
   const vid = playlist[index % playlist.length] || "t-v8rWA5Kuw";
