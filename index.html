@@ -881,27 +881,37 @@ function onYouTubeIframeAPIReady(){
   }
 
   // Filler just ended → play next random filler
-  if(currentFillers.length){
+  // Filler just ended
+if(currentFillers.length){
 
-    fillerIndex++;
+  const currentSlot =
+    `${data.slot.start}-${data.slot.end}`;
 
-    if(fillerIndex >= currentFillers.length){
-
-      for(let i=currentFillers.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [currentFillers[i],currentFillers[j]] =
-        [currentFillers[j],currentFillers[i]];
-      }
-
-      fillerIndex = 0;
-    }
-
-    player.loadVideoById(
-      currentFillers[fillerIndex]
-    );
-
+  // schedule changed while fillers were playing
+  if(currentSlot !== currentSlotKey){
+    playNext();
     return;
   }
+
+  fillerIndex++;
+
+  if(fillerIndex >= currentFillers.length){
+
+    for(let i=currentFillers.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [currentFillers[i],currentFillers[j]] =
+      [currentFillers[j],currentFillers[i]];
+    }
+
+    fillerIndex = 0;
+  }
+
+  player.loadVideoById(
+    currentFillers[fillerIndex]
+  );
+
+  return;
+}
 
 }
 
