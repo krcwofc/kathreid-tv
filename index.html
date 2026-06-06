@@ -518,6 +518,7 @@ let index = 0;
 let currentFillers = [];
 let dailyMovieLock = {};
     let movieInProgress = false;
+    let fillerIndex = 0;
 
 let currentSlotKey = "";
 let currentSlotLabel = "";
@@ -620,6 +621,8 @@ function build(slot) {
   currentMovieId = movieId;
 currentFillers = fillers.map(v => v.id);
 
+   fillerIndex = 0;
+
 movieInProgress = true;
 
 playlist = [];
@@ -674,15 +677,20 @@ return;
 
     } else {
 
-     const fillerTime = slotProgress - duration;
+     if (fillerIndex === 0) {
 
-const fillerIndex =
-  Math.floor(fillerTime / 300) %
-  currentFillers.length;
+  const fillerPool = [...currentFillers];
 
-      player.loadVideoById(
-        currentFillers[fillerIndex]
-      );
+  for (let i = fillerPool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [fillerPool[i], fillerPool[j]] =
+    [fillerPool[j], fillerPool[i]];
+  }
+
+  currentFillers = fillerPool;
+}
+
+player.loadVideoById(currentFillers[fillerIndex]);
     }
 
   }, 500);
@@ -850,14 +858,52 @@ function onYouTubeIframeAPIReady(){
 
     const data = getSlot();
 
-    if(currentIsMovieSlot){
+   if(currentIsMovieSlot){
 
-      movieInProgress = false;
+  const currentVideo =
+    player.getVideoData()?.video_id;
 
-      // jump to whatever block should be live now
-      currentSlotKey = "";
+  // Movie just ended → start first filler
+  if(currentVideo === currentMovieId){
 
+    movieInProgress = false;
+
+    fillerIndex = 0;
+
+    if(currentFillers.length){
+
+      player.loadVideoById(
+        currentFillers[fillerIndex]
+      );
+
+      return;
     }
+  }
+
+  // Filler just ended → play next random filler
+  if(currentFillers.length){
+
+    fillerIndex++;
+
+    if(fillerIndex >= currentFillers.length){
+
+      for(let i=currentFillers.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [currentFillers[i],currentFillers[j]] =
+        [currentFillers[j],currentFillers[i]];
+      }
+
+      fillerIndex = 0;
+    }
+
+    player.loadVideoById(
+      currentFillers[fillerIndex]
+    );
+
+    return;
+  }
+
+}
 
     playNext();
   }
