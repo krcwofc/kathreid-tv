@@ -1011,6 +1011,25 @@ window.addEventListener("scroll", () => {
   }
 });
 
+    function getMovieTitle(videoId) {
+  for (const block of schedule) {
+    for (const slot of block.slots) {
+      for (const v of slot.videos) {
+        
+        // only accept movie-type objects
+        if (
+          typeof v === "object" &&
+          v.type === "movie" &&
+          v.id === videoId
+        ) {
+          return v.title || "Untitled Movie";
+        }
+        
+      }
+    }
+  }
+  return null;
+}
 
 </script>
 
