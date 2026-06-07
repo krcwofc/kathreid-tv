@@ -1,11 +1,9 @@
-
-{
-  "slot": {
-    "start": 600,
-    "end": 720,
-    "label": "🧪 TEST SLOT - Morning Block"
+const state = {
+  slot: {
+    start: 480,
+    end: 600,
+    label: "TEST SLOT"
   },
-  "movieId": "TEST123",
-  "movieTitle": "🔥 TEST MOVIE - Hello, Love, Goodbye",
-  "timestamp": 123456
-}
+  movieId: "BvMJ0fNzIok",
+  movieTitle: "Hello, Love, Goodbye"
+};
