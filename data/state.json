@@ -1,9 +1,1 @@
-const state = {
-  slot: {
-    start: 480,
-    end: 600,
-    label: "TEST SLOT"
-  },
-  movieId: "BvMJ0fNzIok",
-  movieTitle: "Hello, Love, Goodbye"
-};
+
