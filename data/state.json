@@ -1,0 +1,6 @@
+fs.writeFileSync("./data/state.json", JSON.stringify({
+  slotKey,
+  slotLabel,
+  movieId,
+  timestamp: Date.now()
+}));
