@@ -1,6 +1,9 @@
 fs.writeFileSync("./data/state.json", JSON.stringify({
-  slotKey,
-  slotLabel,
+  slot: {
+    start: slot.start,
+    end: slot.end,
+    label: slot.label
+  },
   movieId,
   movieTitle,
   timestamp: Date.now()
