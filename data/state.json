@@ -1,10 +1,11 @@
-fs.writeFileSync("./data/state.json", JSON.stringify({
-  slot: {
-    start: slot.start,
-    end: slot.end,
-    label: slot.label
+
+{
+  "slot": {
+    "start": 600,
+    "end": 720,
+    "label": "🧪 TEST SLOT - Morning Block"
   },
-  movieId,
-  movieTitle,
-  timestamp: Date.now()
-}));
+  "movieId": "TEST123",
+  "movieTitle": "🔥 TEST MOVIE - Hello, Love, Goodbye",
+  "timestamp": 123456
+}
