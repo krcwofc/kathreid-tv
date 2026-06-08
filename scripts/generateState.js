@@ -1,44 +1,58 @@
 import fs from "fs";
 
-
-/* ✅ TEMP SAFE STATE SOURCE
-   (this is what your TV system MUST eventually provide)
-   Replace these values from your actual TV logic source later
+/*
+  IMPORTANT:
+  This generator MUST receive real data from somewhere.
+  Since TV logic is not connected yet, we make failures explicit.
 */
 
 function getStateFromTV() {
-  // 🔥 THIS is where your real TV logic must eventually connect
-  // For now, we prevent UNKNOWN output instead of fake zeros
+  // ❗ THIS MUST BE CONNECTED TO YOUR REAL TV SYSTEM
+  // For now we throw a clear signal instead of hiding it
 
-  return {
-    slot: {
-      start: null,
-      end: null,
-      label: null
-    },
-    movieId: null,
-    movieTitle: null
-  };
+  return null;
 }
 
 const tvState = getStateFromTV();
 
 /* -------------------------
-   🧠 CLEAN OUTPUT FIX
+   🧠 VALIDATION
 ------------------------- */
 
-// Prevent UNKNOWN SLOT spam
-const slot =
-  tvState.slot?.start && tvState.slot?.end
-    ? tvState.slot
-    : {
-        start: 0,
-        end: 0,
-        label: "LIVE PROGRAMMING"
-      };
+if (!tvState) {
+  console.error("❌ No TV state source connected yet");
+
+  const fallback = {
+    slot: {
+      start: 0,
+      end: 0,
+      label: "NO LIVE STATE CONNECTED"
+    },
+    movieId: null,
+    movieTitle: null,
+    timestamp: Date.now(),
+    error: "TV_STATE_NOT_CONNECTED"
+  };
+
+  fs.writeFileSync(
+    "./data/state.json",
+    JSON.stringify(fallback, null, 2)
+  );
+
+  console.log("⚠️ fallback state.json written (no TV connection)");
+  process.exit(0);
+}
+
+/* -------------------------
+   🧠 CLEAN OUTPUT (REAL DATA ONLY)
+------------------------- */
 
 const state = {
-  slot,
+  slot: {
+    start: tvState.slot.start,
+    end: tvState.slot.end,
+    label: tvState.slot.label
+  },
   movieId: tvState.movieId || null,
   movieTitle: tvState.movieTitle || null,
   timestamp: Date.now()
