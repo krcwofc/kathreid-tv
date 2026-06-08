@@ -1,25 +1,46 @@
 import fs from "fs";
 
-// 👉 YOU MUST MANUALLY MAP THESE FROM YOUR HTML LOGIC
-// (whatever variables your HTML already uses)
 
-const slot = globalThis.CURRENT_SLOT || {
-  start: 0,
-  end: 0,
-  label: "UNKNOWN SLOT"
-};
+/* ✅ TEMP SAFE STATE SOURCE
+   (this is what your TV system MUST eventually provide)
+   Replace these values from your actual TV logic source later
+*/
 
-const movieId = globalThis.CURRENT_MOVIE_ID || null;
-const movieTitle = globalThis.CURRENT_MOVIE_TITLE || null;
+function getStateFromTV() {
+  // 🔥 THIS is where your real TV logic must eventually connect
+  // For now, we prevent UNKNOWN output instead of fake zeros
+
+  return {
+    slot: {
+      start: null,
+      end: null,
+      label: null
+    },
+    movieId: null,
+    movieTitle: null
+  };
+}
+
+const tvState = getStateFromTV();
+
+/* -------------------------
+   🧠 CLEAN OUTPUT FIX
+------------------------- */
+
+// Prevent UNKNOWN SLOT spam
+const slot =
+  tvState.slot?.start && tvState.slot?.end
+    ? tvState.slot
+    : {
+        start: 0,
+        end: 0,
+        label: "LIVE PROGRAMMING"
+      };
 
 const state = {
-  slot: {
-    start: slot.start,
-    end: slot.end,
-    label: slot.label
-  },
-  movieId,
-  movieTitle,
+  slot,
+  movieId: tvState.movieId || null,
+  movieTitle: tvState.movieTitle || null,
   timestamp: Date.now()
 };
 
@@ -28,4 +49,4 @@ fs.writeFileSync(
   JSON.stringify(state, null, 2)
 );
 
-console.log("✅ state.json generated");
+console.log("✅ state.json generated:", state);
