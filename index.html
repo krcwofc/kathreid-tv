@@ -1031,6 +1031,15 @@ window.addEventListener("scroll", () => {
   return null;
 }
 
+    function updateBridgeState(slot, movieId, movieTitle) {
+  window.__KATHREID_STATE__ = {
+    slot,
+    movieId,
+    movieTitle,
+    timestamp: Date.now()
+  };
+}
+
 </script>
 
   <footer class="site-footer">
