@@ -1,20 +1,21 @@
-const slot = process.env.SLOT || null;
-const movieId = process.env.MOVIE_ID || null;
-const movieTitle = process.env.MOVIE_TITLE || null;
+import fs from "fs";
 
-async function generateBridge() {
-  const res = await fetch("https://krcwofc.github.io/kathreid-tv/api/write-bridge", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      slot,
-      movieId,
-      movieTitle,
-      timestamp: Date.now()
-    })
-  });
+async function run() {
+  const res = await fetch("https://krcwofc.github.io/kathreid-tv/api/bridge-state");
 
-  console.log("Bridge response:", await res.text());
+  const data = await res.json();
+
+  if (!data) {
+    console.error("No bridge data");
+    process.exit(1);
+  }
+
+  fs.writeFileSync(
+    "./data/state-bridge.json",
+    JSON.stringify(data, null, 2)
+  );
+
+  console.log("Bridge written:", data);
 }
 
-generateBridge();
+run();
