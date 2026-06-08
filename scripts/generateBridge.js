@@ -1,12 +1,10 @@
-function writeBridgeState(slot, movieId, movieTitle) {
-  const payload = {
+export function generateBridge(slot, movieId, movieTitle) {
+  window.__KATHREID_STATE__ = {
     slot,
     movieId,
     movieTitle,
     timestamp: Date.now()
   };
 
-  window.__KATHREID_STATE__ = payload;
-
-  console.log("Bridge updated:", payload);
+  console.log("📡 Bridge state updated:", window.__KATHREID_STATE__);
 }
