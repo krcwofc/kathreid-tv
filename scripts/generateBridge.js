@@ -1,10 +1,12 @@
-export function generateBridge(slot, movieId, movieTitle) {
-  window.__KATHREID_STATE__ = {
-    slot,
-    movieId,
-    movieTitle,
-    timestamp: Date.now()
-  };
-
-  console.log("📡 Bridge state updated:", window.__KATHREID_STATE__);
+export async function generateBridge(slot, movieId, movieTitle) {
+  return fetch("https://krcwofc.github.io/kathreid-tv/api/write-bridge", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      slot,
+      movieId,
+      movieTitle,
+      timestamp: Date.now()
+    })
+  });
 }
