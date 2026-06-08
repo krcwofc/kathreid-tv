@@ -28,3 +28,9 @@ jobs:
           git add data/state-bridge.json
           git commit -m "update state bridge" || echo "No changes"
           git push
+
+      - name: Create data folder
+        run: mkdir -p data
+
+      - name: Debug files
+        run: ls -R
