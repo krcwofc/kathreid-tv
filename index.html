@@ -1040,35 +1040,14 @@ window.addEventListener("scroll", () => {
   return null;
 }
 
-    async function updateBridgeState(slot, movieId, movieTitle) {
-  const payload = {
+   async function updateBridgeState(slot, movieId, movieTitle) {
+  console.log("Bridge update disabled (no backend available)", {
     slot,
     movieId,
-    movieTitle,
-    timestamp: Date.now()
-  };
-
-  try {
-    const res = await fetch("https://krcwofc.github.io/kathreid-tv/api/write-bridge", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!res.ok) {
-      console.error("❌ Bridge API failed:", await res.text());
-      return;
-    }
-
-    console.log("✅ Bridge updated:", payload);
-
-  } catch (err) {
-    console.error("❌ Bridge network error:", err);
-  }
+    movieTitle
+  });
 }
-
+    
 </script>
 
   <footer class="site-footer">
