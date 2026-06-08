@@ -1,21 +1,20 @@
-import fs from "fs";
+let lastSlotKey = null;
 
-const state = {
-  slot: {
-    start: 0,
-    end: 0,
-    label: "AUTO GENERATED"
-  },
-  movieId: null,
-  movieTitle: null,
-  timestamp: Date.now()
-};
+export function getBlockAnnouncementState() {
+  const { block, slot } = getActiveSlot();
 
-fs.mkdirSync("./data", { recursive: true });
+  const slotKey = `${slot.start}-${slot.end}`;
+  const isNewBlock = slotKey !== lastSlotKey;
 
-fs.writeFileSync(
-  "./data/state-bridge.json",
-  JSON.stringify(state, null, 2)
-);
+  if (isNewBlock) {
+    lastSlotKey = slotKey;
+  }
 
-console.log("✅ Bridge written locally");
+  return {
+    block,
+    slot,
+    blockChange: isNewBlock,
+    announcementText: `${block} • ${slot.label}`,
+    timestamp: Date.now()
+  };
+}
