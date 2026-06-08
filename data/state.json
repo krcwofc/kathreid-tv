@@ -1,11 +1,10 @@
 {
   "slot": {
-    "start": 0,
-    "end": 0,
-    "label": "NO LIVE STATE CONNECTED"
+    "start": 480,
+    "end": 600,
+    "label": "INIT"
   },
   "movieId": null,
   "movieTitle": null,
-  "timestamp": 1780881014054,
-  "error": "TV_STATE_NOT_CONNECTED"
+  "timestamp": 1780881130428
 }
