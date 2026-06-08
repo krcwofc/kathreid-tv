@@ -14,7 +14,7 @@ function getTVState() {
       label: "Morning Block"
     },
     movieId: "demo123",
-    movieTitle: "Hello, Love, Goodbye"
+    movieTitle: "Movie"
   };
 }
 
