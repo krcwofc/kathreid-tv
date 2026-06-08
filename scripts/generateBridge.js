@@ -2,9 +2,6 @@ import fs from "fs";
 
 /*
   STATE BRIDGE READER (REAL VERSION)
-
-  This file NO LONGER generates fake data.
-  It ONLY reads the live state written by your HTML (or bridge updater).
 */
 
 function readBridgeState() {
