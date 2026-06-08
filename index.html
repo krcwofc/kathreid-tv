@@ -653,8 +653,6 @@ currentFillers = fillers.map(v => v.id);
 
 movieInProgress = true;
 
-   updateBridgeState(slot, currentMovieId, getMovieTitle(currentMovieId));
-
 playlist = [];
 return;
 }
@@ -692,6 +690,12 @@ return;
   const slotProgress = getSlotProgress(slot) * 60;
 
   player.loadVideoById(currentMovieId);
+
+      updateBridgeState(
+  slot,
+  currentMovieId,
+  getMovieTitle(currentMovieId)
+);
 
   const waitForDuration = setInterval(() => {
 
