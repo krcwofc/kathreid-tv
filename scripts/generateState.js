@@ -1,51 +1,47 @@
 import fs from "fs";
 
-/*
-  IMPORTANT:
-  This generator MUST receive real data from somewhere.
-  Since TV logic is not connected yet, we make failures explicit.
-*/
+/* =========================
+   📡 READ TV BRIDGE STATE
+========================= */
 
-function getStateFromTV() {
-  // ❗ THIS MUST BE CONNECTED TO YOUR REAL TV SYSTEM
-  // For now we throw a clear signal instead of hiding it
-
-  return null;
+function getStateFromBridge() {
+  try {
+    const raw = fs.readFileSync("./data/state-bridge.json", "utf-8");
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error("❌ Cannot read state-bridge.json:", err.message);
+    return null;
+  }
 }
 
-const tvState = getStateFromTV();
+const tvState = getStateFromBridge();
 
-/* -------------------------
+/* =========================
    🧠 VALIDATION
-------------------------- */
+========================= */
 
-if (!tvState) {
-  console.error("❌ No TV state source connected yet");
+if (!tvState || !tvState.slot) {
+  console.error("❌ Invalid or missing bridge state");
 
   const fallback = {
     slot: {
       start: 0,
       end: 0,
-      label: "NO LIVE STATE CONNECTED"
+      label: "NO TV STATE"
     },
     movieId: null,
     movieTitle: null,
     timestamp: Date.now(),
-    error: "TV_STATE_NOT_CONNECTED"
+    error: "BRIDGE_MISSING"
   };
 
-  fs.writeFileSync(
-    "./data/state.json",
-    JSON.stringify(fallback, null, 2)
-  );
-
-  console.log("⚠️ fallback state.json written (no TV connection)");
+  fs.writeFileSync("./data/state.json", JSON.stringify(fallback, null, 2));
   process.exit(0);
 }
 
-/* -------------------------
-   🧠 CLEAN OUTPUT (REAL DATA ONLY)
-------------------------- */
+/* =========================
+   📦 WRITE FINAL STATE
+========================= */
 
 const state = {
   slot: {
@@ -63,4 +59,4 @@ fs.writeFileSync(
   JSON.stringify(state, null, 2)
 );
 
-console.log("✅ state.json generated:", state);
+console.log("✅ state.json generated from bridge:", state);
