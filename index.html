@@ -691,12 +691,6 @@ return;
 
   player.loadVideoById(currentMovieId);
 
-      updateBridgeState(
-  slot,
-  currentMovieId,
-  getMovieTitle(currentMovieId)
-);
-
   const waitForDuration = setInterval(() => {
 
     const duration = player.getDuration();
