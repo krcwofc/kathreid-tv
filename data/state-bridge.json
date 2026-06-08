@@ -1,28 +1,29 @@
 {
   "slot": {
-    "start": 1320,
-    "end": 1440,
-    "label": "10 PM–12 AM Someone, Someday Central 🎬",
+    "start": 0,
+    "end": 120,
+    "label": "12–2 AM Everyday Kath",
     "videos": [
       "t-v8rWA5Kuw",
-      "4Q0EN8ZAIug",
-      "K6f68j1T4AY",
-      "b565tKG9004",
-      "dEZ8MDir204",
-      "kcBM-5bNivg",
-      "b7yUWKManSQ",
-      "EmDbYYpLXS4",
-      "E9VI0fNv3A0",
-      "r7KtHlgfALs",
-      "8FT9UkJwogU",
-      "Ln4xgLMPj70",
-      "YNNam5OoNDI",
-      "vZwg1SEF9S8",
-      "i9h6zYxjTlo",
-      "kJJ4yr-O6wI"
+      "LJLrZvzS2DU",
+      "1n3BRxP4b4Y",
+      "I3kczpwE8Zs",
+      "64DOHt73dYw",
+      "P-PQ_GTlJoc",
+      "FWjKGFehPUg",
+      "5VPSYdxfku8",
+      "kGiKGr8xecM",
+      "X5BJTyOhvrQ",
+      "0nUeISatDl8",
+      "df-kMzg1rJg",
+      "ymbeo9YkhUg",
+      "IvLsBOOEHEM",
+      "g9S4w0oCaSA",
+      "F-BX-6GOb0M",
+      "WbBn1oyTsQw"
     ]
   },
   "blockChange": true,
-  "announcement": "🌆 EVENING • 10 PM–12 AM Someone, Someday Central 🎬",
-  "timestamp": 1780934115464
+  "announcement": "🌙 LATE NIGHT • 12–2 AM Everyday Kath",
+  "timestamp": 1780934424687
 }
