@@ -2,9 +2,10 @@
   "slot": {
     "start": 0,
     "end": 0,
-    "label": "LIVE PROGRAMMING"
+    "label": "NO LIVE STATE CONNECTED"
   },
   "movieId": null,
   "movieTitle": null,
-  "timestamp": 1780880891755
+  "timestamp": 1780881014054,
+  "error": "TV_STATE_NOT_CONNECTED"
 }
