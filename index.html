@@ -691,6 +691,10 @@ return;
 
   player.loadVideoById(currentMovieId);
 
+      const movieTitle = getMovieTitle(currentMovieId);
+
+updateBridgeState(slot, currentMovieId, movieTitle);
+
   const waitForDuration = setInterval(() => {
 
     const duration = player.getDuration();
@@ -803,10 +807,15 @@ function playNext() {
   document.getElementById("nowAiring").innerText =
     `${data.block} • ${slot.label}`;
 
-  player.loadVideoById({
-    videoId: vid,
-    startSeconds: startTime
-  });
+ const movieTitle = getMovieTitle(vid);
+
+// PUSH STATE OUT
+updateBridgeState(slot, vid, movieTitle);
+
+player.loadVideoById({
+  videoId: vid,
+  startSeconds: startTime
+});
 
   index++;
 
