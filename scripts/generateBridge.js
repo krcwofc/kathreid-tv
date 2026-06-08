@@ -1,20 +1,13 @@
-let lastSlotKey = null;
+import { getBlockAnnouncementState } from "./scheduler.js";
 
-export function getBlockAnnouncementState() {
-  const { block, slot } = getActiveSlot();
+const state = getBlockAnnouncementState();
 
-  const slotKey = `${slot.start}-${slot.end}`;
-  const isNewBlock = slotKey !== lastSlotKey;
-
-  if (isNewBlock) {
-    lastSlotKey = slotKey;
-  }
-
-  return {
-    block,
-    slot,
-    blockChange: isNewBlock,
-    announcementText: `${block} • ${slot.label}`,
-    timestamp: Date.now()
-  };
-}
+fs.writeFileSync(
+  "./data/state-bridge.json",
+  JSON.stringify({
+    slot: state.slot,
+    blockChange: state.blockChange,
+    announcement: state.announcementText,
+    timestamp: state.timestamp
+  }, null, 2)
+);
