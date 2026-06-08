@@ -1,3 +1,5 @@
+import fs from "fs";
+
 import { getBlockAnnouncementState } from "./scheduler.js";
 
 const state = getBlockAnnouncementState();
