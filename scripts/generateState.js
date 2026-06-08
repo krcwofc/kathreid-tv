@@ -35,8 +35,8 @@ if (!tvState || !tvState.slot) {
     error: "BRIDGE_MISSING"
   };
 
-  fs.writeFileSync("./data/state.json", JSON.stringify(fallback, null, 2));
-  process.exit(0);
+fs.writeFileSync("./data/state-bridge.json", JSON.stringify(state, null, 2)); 
+process.exit(0);
 }
 
 /* =========================
