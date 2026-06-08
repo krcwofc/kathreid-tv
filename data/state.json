@@ -1,1 +1,10 @@
-
+{
+  "slot": {
+    "start": 0,
+    "end": 0,
+    "label": "UNKNOWN SLOT"
+  },
+  "movieId": null,
+  "movieTitle": null,
+  "timestamp": 1780879326237
+}
