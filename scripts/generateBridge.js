@@ -1,45 +1,23 @@
-import fs from "fs";
-
-/*
-  STATE BRIDGE READER (REAL VERSION)
-*/
-
-function readBridgeState() {
-  const raw = fs.readFileSync("./data/state-bridge.json", "utf-8");
-  return JSON.parse(raw);
-}
-
-let state;
-
-try {
-  state = readBridgeState();
-} catch (err) {
-  console.error("❌ Failed to read state-bridge.json:", err);
-
-  // fallback safe state (prevents crash, not used for real logic)
-  state = {
-    slot: {
-      start: 0,
-      end: 0,
-      label: "NO DATA"
-    },
-    movieId: null,
-    movieTitle: null
+async function writeBridgeState(slot, movieId, movieTitle) {
+  const payload = {
+    slot,
+    movieId,
+    movieTitle,
+    timestamp: Date.now()
   };
+
+  try {
+    await fetch("https://krcwofc.github.io/kathreid-tv/api/write-bridge", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    console.log("✅ Bridge state sent:", payload);
+
+  } catch (err) {
+    console.error("❌ Bridge write failed:", err);
+  }
 }
-
-fs.mkdirSync("./data", { recursive: true });
-
-fs.writeFileSync(
-  "./data/state.json",
-  JSON.stringify(
-    {
-      ...state,
-      timestamp: Date.now()
-    },
-    null,
-    2
-  )
-);
-
-console.log("✅ state.json updated from bridge:", state);
