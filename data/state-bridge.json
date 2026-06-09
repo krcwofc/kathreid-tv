@@ -1,29 +1,19 @@
 {
   "slot": {
-    "start": 0,
-    "end": 120,
-    "label": "12–2 AM Everyday Kath",
+    "start": 120,
+    "end": 240,
+    "label": "2–4 AM Chill with KathReid Music 🎶",
     "videos": [
-      "t-v8rWA5Kuw",
-      "LJLrZvzS2DU",
-      "1n3BRxP4b4Y",
-      "I3kczpwE8Zs",
-      "64DOHt73dYw",
-      "P-PQ_GTlJoc",
-      "FWjKGFehPUg",
-      "5VPSYdxfku8",
-      "kGiKGr8xecM",
-      "X5BJTyOhvrQ",
-      "0nUeISatDl8",
-      "df-kMzg1rJg",
-      "ymbeo9YkhUg",
-      "IvLsBOOEHEM",
-      "g9S4w0oCaSA",
-      "F-BX-6GOb0M",
-      "WbBn1oyTsQw"
+      "rZaaucc3bnM",
+      "sEl9EBRtDsU",
+      "tkiYA7IAJJU",
+      "kK_IxSOOdBk",
+      "GQo2FerStNA",
+      "1foFFymuEaU",
+      "kJJ4yr-O6wI"
     ]
   },
   "blockChange": true,
-  "announcement": "🌙 LATE NIGHT • 12–2 AM Everyday Kath",
-  "timestamp": 1781027717755
+  "announcement": "🌙 LATE NIGHT • 2–4 AM Chill with KathReid Music 🎶",
+  "timestamp": 1781028318563
 }
