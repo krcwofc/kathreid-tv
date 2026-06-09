@@ -1,8 +1,6 @@
 name: Generate State Bridge
 
 on:
-  schedule:
-    - cron: "* * * * *"
   workflow_dispatch:
 
 permissions:
