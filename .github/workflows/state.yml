@@ -1,8 +1,6 @@
 name: Generate TV State
 
 on:
-  schedule:
-    - cron: "* * * * *"   # runs every minute
   workflow_dispatch:
 
 jobs:
@@ -18,22 +16,28 @@ jobs:
         with:
           node-version: 20
 
-      # ✅ STEP 1: Ensure bridge file exists (safety step)
       - name: Ensure bridge file exists
         run: |
+          mkdir -p data
+
           if [ ! -f data/state-bridge.json ]; then
             echo '{"slot":{"start":0,"end":0,"label":"NO BRIDGE"},"movieId":null,"movieTitle":null,"timestamp":0}' > data/state-bridge.json
           fi
 
-      # ✅ STEP 2: Generate state.json from bridge
       - name: Generate state.json
         run: node scripts/generateState.js
 
-      # ✅ STEP 3: Commit BOTH bridge + state
       - name: Commit state files
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
           git add data/state.json data/state-bridge.json
-          git commit -m "update tv state" || echo "No changes"
-          git push
+
+          git diff --cached --quiet && exit 0
+
+          git commit -m "update tv state"
+
+          git pull --rebase origin main
+
+          git push origin main
