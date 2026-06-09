@@ -1,31 +1,107 @@
 {
   "slot": {
-    "start": 840,
-    "end": 960,
-    "label": "2–4 PM Someone, Someday Central 🎬",
+    "start": 960,
+    "end": 1080,
+    "label": "4–6 PM James' TV & Movies 🎬",
     "videos": [
-      "t-v8rWA5Kuw",
-      "ERL9QYSTEl0",
-      "K6f68j1T4AY",
-      "Q6PyDZwadQw",
-      "zaBgZox_wvY",
-      "DTB8euc0zK4",
-      "3k31JYplJ84",
-      "Tk6McKHYDzg",
-      "orTzNvnHGmQ",
-      "vzTufl_W8wk",
-      "yWcZgZUmUU0",
-      "G5GNrBDJ9r0",
-      "pNSvZaCxWp4",
-      "re09KVx3tAY",
-      "IB1-prswQ2E",
-      "I4P9teZHFA8",
-      "i2Kt3tOk7NQ",
-      "cJxSA3uiD5Y",
-      "kcBM-5bNivg"
+      {
+        "id": "Mes4k3QQtCo",
+        "type": "movie",
+        "title": "Miss Granny"
+      },
+      {
+        "id": "3_BtFPbABl4",
+        "type": "movie",
+        "title": "Diary Ng Panget"
+      },
+      {
+        "id": "eMwM5WKjg0A",
+        "type": "movie",
+        "title": "Para sa Hopeless Romantic"
+      },
+      {
+        "id": "rbXwmiE7ccg",
+        "type": "movie",
+        "title": "Never Not Love You"
+      },
+      {
+        "id": "ltQQ04N4bl0",
+        "type": "movie",
+        "title": "Talk Back and You’re Dead"
+      },
+      {
+        "id": "9Oa53aUeqbA",
+        "type": "movie",
+        "title": "Beauty and The Bestie"
+      },
+      {
+        "id": "C--pLKAkGE0",
+        "type": "movie",
+        "title": "Maalaala Mo Kaya - Stuffed Toy"
+      },
+      {
+        "id": "PrL2XF1KEkg",
+        "type": "filler"
+      },
+      {
+        "id": "8IigCoSwrlg",
+        "type": "filler"
+      },
+      {
+        "id": "c1JS34NhFWw",
+        "type": "filler"
+      },
+      {
+        "id": "m3YZ2tA4Xn8",
+        "type": "filler"
+      },
+      {
+        "id": "tuBij65fsVU",
+        "type": "filler"
+      },
+      {
+        "id": "SHTQmSG8nQc",
+        "type": "filler"
+      },
+      {
+        "id": "pd8q_5vg--0",
+        "type": "filler"
+      },
+      {
+        "id": "FEyXacG0rdE",
+        "type": "filler"
+      },
+      {
+        "id": "Sc5IBX6V1qM",
+        "type": "filler"
+      },
+      {
+        "id": "aplqs0XogAA",
+        "type": "filler"
+      },
+      {
+        "id": "JX-FV435kzo",
+        "type": "filler"
+      },
+      {
+        "id": "Sc5IBX6V1qM",
+        "type": "filler"
+      },
+      {
+        "id": "LpcloGtge2A",
+        "type": "filler"
+      },
+      {
+        "id": "qLOqnlBoBiI",
+        "type": "filler"
+      },
+      {
+        "id": "7uxXFXuFztE",
+        "type": "filler"
+      }
     ]
   },
   "blockChange": true,
-  "announcement": "☀️ AFTERNOON • 2–4 PM Someone, Someday Central 🎬",
-  "timestamp": 1780991717466
+  "announcement": "☀️ AFTERNOON • 4–6 PM James' TV & Movies 🎬",
+  "timestamp": 1780992021719
 }
