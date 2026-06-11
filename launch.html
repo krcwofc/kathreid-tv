@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KathReid TV - Launch Night</title>
+<title>KathReid TV Launch Night</title>
 
 <style>
 
@@ -15,110 +16,99 @@ box-sizing:border-box;
 }
 
 body{
-height:100vh;
-overflow:hidden;
 background:#000;
+overflow:hidden;
 font-family:Arial,sans-serif;
+color:white;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
-color:white;
 }
 
-.stars{
-position:absolute;
+#particles{
+position:fixed;
+top:0;
+left:0;
 width:100%;
 height:100%;
+pointer-events:none;
+z-index:1;
+}
+
+.particle{
+position:absolute;
+width:3px;
+height:3px;
+background:white;
+border-radius:50%;
+opacity:.6;
+animation:float linear infinite;
+}
+
+@keyframes float{
+from{
+transform:translateY(110vh);
+opacity:0;
+}
+10%{
+opacity:1;
+}
+90%{
+opacity:1;
+}
+to{
+transform:translateY(-10vh);
+opacity:0;
+}
+}
+
+.backgroundGlow{
+position:fixed;
+width:900px;
+height:900px;
 background:
-radial-gradient(white 1px, transparent 1px);
-background-size:60px 60px;
-opacity:.15;
-animation:drift 60s linear infinite;
+radial-gradient(circle,
+rgba(255,215,0,.25) 0%,
+rgba(255,215,0,.08) 35%,
+transparent 70%);
+filter:blur(60px);
+z-index:0;
 }
 
-@keyframes drift{
-from{transform:translateY(0);}
-to{transform:translateY(-200px);}
-}
-
-.container{
+.content{
 position:relative;
-z-index:10;
+z-index:2;
 max-width:900px;
 padding:40px;
-animation:fadeIn 2s ease;
 }
 
 .logo{
-font-size:4rem;
-font-weight:900;
-letter-spacing:5px;
-text-shadow:
-0 0 10px #fff,
-0 0 20px #fff,
-0 0 40px #ffd700;
-}
-
-.launch{
-margin-top:15px;
-font-size:1.2rem;
-letter-spacing:4px;
-color:#ffd700;
-}
-
-.names{
-margin-top:30px;
-font-size:1.5rem;
-line-height:2;
-}
-
-.message{
-margin-top:30px;
-opacity:.8;
-line-height:1.8;
-font-size:1.05rem;
-}
-
-.enter-btn{
-display:inline-block;
-margin-top:40px;
-padding:18px 50px;
-border:2px solid #ffd700;
-color:#ffd700;
-text-decoration:none;
-font-weight:bold;
-letter-spacing:2px;
-border-radius:10px;
-transition:.3s;
-animation:pulse 2s infinite;
-}
-
-.enter-btn:hover{
-background:#ffd700;
-color:black;
+width:min(450px,80vw);
+margin-bottom:30px;
+filter:
+drop-shadow(0 0 15px rgba(255,255,255,.8))
+drop-shadow(0 0 30px rgba(255,215,0,.7));
+animation:pulse 4s infinite;
 }
 
 @keyframes pulse{
-0%{box-shadow:0 0 0px #ffd700;}
-50%{box-shadow:0 0 30px #ffd700;}
-100%{box-shadow:0 0 0px #ffd700;}
+0%,100%{
+transform:scale(1);
+}
+50%{
+transform:scale(1.03);
+}
 }
 
-.live{
-position:absolute;
-top:25px;
-right:25px;
-background:red;
-padding:10px 18px;
-border-radius:30px;
-font-size:.9rem;
-font-weight:bold;
-animation:blink 1.5s infinite;
+.slide{
+display:none;
+animation:fadeIn 1s ease;
 }
 
-@keyframes blink{
-50%{opacity:.4;}
+.active{
+display:block;
 }
 
 @keyframes fadeIn{
@@ -132,57 +122,227 @@ transform:translateY(0);
 }
 }
 
-.footer{
+h1{
+font-size:2.2rem;
+margin-bottom:20px;
+}
+
+p{
+font-size:1.15rem;
+line-height:1.8;
+}
+
+.live{
+position:fixed;
+top:20px;
+right:20px;
+background:red;
+padding:10px 18px;
+border-radius:999px;
+font-weight:bold;
+animation:blink 1.2s infinite;
+z-index:3;
+}
+
+@keyframes blink{
+50%{
+opacity:.5;
+}
+}
+
+.progress{
+width:350px;
+height:8px;
+background:#333;
+margin:40px auto 0;
+border-radius:999px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+background:gold;
+width:0%;
+animation:fill 30s linear forwards;
+}
+
+@keyframes fill{
+from{
+width:0%;
+}
+to{
+width:100%;
+}
+}
+
+.enterBtn{
 margin-top:35px;
-opacity:.6;
+padding:14px 30px;
+font-size:1rem;
+font-weight:bold;
+border:none;
+border-radius:999px;
+cursor:pointer;
+background:white;
+color:black;
+transition:.3s;
+}
+
+.enterBtn:hover{
+transform:scale(1.05);
+}
+
+.small{
+margin-top:15px;
 font-size:.9rem;
+opacity:.7;
 }
 
 </style>
 </head>
-
 <body>
 
-<div class="stars"></div>
+<audio autoplay loop>
+<source src="assets/launch.mp3" type="audio/mpeg">
+</audio>
+
+<div class="backgroundGlow"></div>
+
+<div id="particles"></div>
 
 <div class="live">
-🔴 NOW LIVE
+🔴 LAUNCH NIGHT
 </div>
 
-<div class="container">
+<div class="content">
 
-<div class="logo">
-KATHREID TV
+<img
+src="assets/logo.png"
+alt="KathReid TV"
+class="logo">
+
+<div id="slide1" class="slide active">
+<h1>Welcome To Launch Night</h1>
+<p>
+June 10, 2026<br>
+The Beginning of KathReid TV
+</p>
 </div>
 
-<div class="launch">
-OFFICIAL LAUNCH NIGHT
+<div id="slide2" class="slide">
+<h1>Thank You For Joining Us</h1>
+<p>
+A fan-created 24/7 channel dedicated to<br>
+Kathryn Bernardo and James Reid.
+</p>
 </div>
 
-<div class="names">
-Kathryn Bernardo<br>
-&<br>
-James Reid
+<div id="slide3" class="slide">
+<h1>Tonight's Lineup</h1>
+<p>
+💞 7 PM — KathReid Primetime Feels<br><br>
+✨ 8 PM — KathReid Unscripted<br><br>
+📺 Broadcasting All Night Long
+</p>
 </div>
 
-<div class="message">
-Welcome to KathReid TV.<br><br>
-
-A fan-created 24/7 television channel dedicated to
-Kathryn Bernardo and James Reid.<br><br>
-
-Thank you for joining us on launch night.
+<div id="slide4" class="slide">
+<h1>Day One</h1>
+<p>
+You're among the first viewers ever to enter
+KathReid TV.
+</p>
 </div>
 
-<a href="https://krcwofc.github.io/kathreid-tv/" class="enter-btn">
-📺 ENTER CHANNEL
-</a>
+<div id="slide5" class="slide">
+<h1>Signal Locked</h1>
+<p>
+Preparing Broadcast...
+</p>
+</div>
 
-<div class="footer">
-Broadcasting 24 Hours A Day
+<div id="slide6" class="slide">
+<h1>Entering Channel</h1>
+<p>
+Enjoy the show ❤️
+</p>
+</div>
+
+<div class="progress">
+<div class="bar"></div>
+</div>
+
+<button
+class="enterBtn"
+onclick="enterChannel()">
+ENTER CHANNEL NOW
+</button>
+
+<div class="small">
+Automatically entering in 30 seconds
 </div>
 
 </div>
+
+<script>
+
+function enterChannel(){
+window.location.href =
+"https://krcwofc.github.io/kathreid-tv/";
+}
+
+const slides=[
+"slide1",
+"slide2",
+"slide3",
+"slide4",
+"slide5",
+"slide6"
+];
+
+let current=0;
+
+setInterval(()=>{
+current++;
+if(current<slides.length){
+
+slides.forEach(id=>{
+document.getElementById(id)
+.classList.remove("active");
+});
+
+document.getElementById(slides[current])
+.classList.add("active");
+
+}
+},5000);
+
+setTimeout(()=>{
+enterChannel();
+},30000);
+
+const particles=document.getElementById("particles");
+
+for(let i=0;i<80;i++){
+
+const p=document.createElement("div");
+
+p.className="particle";
+
+p.style.left=Math.random()*100+"vw";
+
+p.style.animationDuration=
+(10+Math.random()*15)+"s";
+
+p.style.animationDelay=
+Math.random()*10+"s";
+
+particles.appendChild(p);
+
+}
+
+</script>
 
 </body>
 </html>
+```
