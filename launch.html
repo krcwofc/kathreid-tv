@@ -163,7 +163,7 @@ animation:fill 30s linear forwards;
 
 @keyframes fill{to{width:100%;}}
 
-/* BUTTON */
+/* BUTTON (hidden until lock) */
 .enterBtn{
 margin-top:20px;
 padding:10px 22px;
@@ -177,6 +177,7 @@ color:black;
 transition:.3s;
 opacity:.75;
 letter-spacing:1px;
+display:none;
 }
 
 .enterBtn:hover{
@@ -190,10 +191,7 @@ font-size:.85rem;
 opacity:.7;
 }
 
-/* =========================
-   🔥 SIGNAL MODULE
-========================= */
-
+/* SIGNAL MODULE */
 .signalWrap{
 margin-top:20px;
 padding:25px;
@@ -345,7 +343,7 @@ animation:unlockPulse 1.2s ease infinite;
 </p>
 </div>
 
-<!-- SIGNAL SLIDE -->
+<!-- SIGNAL -->
 <div id="slide4" class="slide">
 
 <h1>Signal Acquiring</h1>
@@ -390,7 +388,8 @@ CHANNEL LOCKING...
 <div class="bar"></div>
 </div>
 
-<button class="enterBtn" onclick="enterChannel()">
+<!-- BUTTON (hidden until lock) -->
+<button class="enterBtn" id="enterBtn" onclick="enterChannel()">
 ENTER CHANNEL
 </button>
 
@@ -416,6 +415,7 @@ const slides=[
 let current=0;
 
 setInterval(()=>{
+
 current++;
 
 if(current < slides.length){
@@ -445,13 +445,14 @@ p.style.animationDelay=Math.random()*10+"s";
 particles.appendChild(p);
 }
 
-/* SIGNAL */
+/* SIGNAL SYSTEM */
 let signal = 0;
 let locked = false;
 
 const statusEl = document.getElementById("signalStatus");
 const percentEl = document.getElementById("signalPercent");
 const flashEl = document.getElementById("lockFlash");
+const btn = document.getElementById("enterBtn");
 
 function updateSignal(){
 
@@ -497,7 +498,11 @@ function lockSignal(){
 if(locked) return;
 locked = true;
 
+/* GUARANTEED BUTTON REVEAL */
+btn.style.display = "inline-block";
+
 setTimeout(()=>{
+
 flashEl.classList.add("show");
 
 setTimeout(()=>{
