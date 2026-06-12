@@ -352,8 +352,8 @@ animation:unlockPulse 1.2s ease infinite;
 
 <div class="radar"></div>
 
-<div class="scanText">SCANNING SATELLITE FEED</div>
-
+<div class="scanText">INITIALIZING CHANNEL FEED</div>
+  
 <div class="bars">
 <div></div><div></div><div></div><div></div><div></div>
 </div>
@@ -475,7 +475,7 @@ signal = Math.max(0, Math.min(100, signal));
 percentEl.innerText = `SIGNAL: ${Math.floor(signal)}%`;
 
 if(signal < 25){
-statusEl.innerText = "SEARCHING SATELLITE ARRAY...";
+statusEl.innerText = "LOCATING CHANNEL FEED...";
 }
 else if(signal < 55){
 statusEl.innerText = "ALIGNING TRANSMISSION VECTOR...";
