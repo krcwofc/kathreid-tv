@@ -228,17 +228,22 @@ document.getElementById("nowPlaying").textContent = "Live Broadcast";
 load();
 
 /* countdown */
-let t = 8;
-const cd = document.getElementById("countdown");
+const fill = document.getElementById("sliderFill");
 
-const timer = setInterval(()=>{
-t--;
-cd.textContent = t;
-if(t <= 0){
-clearInterval(timer);
+let duration = 8000; // 8 seconds
+let start = Date.now();
+
+const slider = setInterval(() => {
+let elapsed = Date.now() - start;
+let progress = Math.min((elapsed / duration) * 100, 100);
+
+fill.style.width = progress + "%";
+
+if (progress >= 100) {
+clearInterval(slider);
 enter();
 }
-},1000);
+}, 16); // smooth ~60fps
 
 /* particles */
 const pWrap = document.getElementById("particles");
