@@ -92,6 +92,20 @@ display:block;
 filter:drop-shadow(0 0 20px rgba(255,215,0,.5));
 }
 
+  .logo{
+transition:all 0.6s ease;
+transform:scale(1);
+opacity:0.95;
+}
+
+.logo.locked{
+transform:scale(1.04);
+filter:
+drop-shadow(0 0 25px rgba(255,215,0,.9))
+drop-shadow(0 0 40px rgba(255,255,255,.4));
+opacity:1;
+}
+
 .label{
 letter-spacing:4px;
 font-size:.8rem;
@@ -265,9 +279,12 @@ load();
 
 /* countdown */
 const fill = document.getElementById("sliderFill");
+const logo = document.querySelector(".logo");
 
 const duration = 6000;
 const start = Date.now();
+
+let lockedIn = false;
 
 function updateLoader(){
 
@@ -275,6 +292,12 @@ let elapsed = Date.now() - start;
 let progress = Math.min(elapsed / duration, 1);
 
 fill.style.width = (progress * 100) + "%";
+
+/* 🔒 LOCK-IN AT 80% */
+if(progress >= 0.8 && !lockedIn){
+lockedIn = true;
+logo.classList.add("locked");
+}
 
 if(progress >= 1){
 enter();
