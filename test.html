@@ -1,14 +1,11 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>KathReid TV</title>
+<title>KathReid TV Lobby</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -17,7 +14,7 @@ box-sizing:border-box;
 
 body{
 background:#000;
-color:white;
+color:#fff;
 font-family:Arial,sans-serif;
 height:100vh;
 overflow:hidden;
@@ -27,21 +24,15 @@ align-items:center;
 text-align:center;
 }
 
-/* Background Glow */
 .glow{
 position:fixed;
-width:1000px;
-height:1000px;
-background:
-radial-gradient(circle,
-rgba(255,215,0,.25) 0%,
-rgba(255,215,0,.08) 35%,
-transparent 70%);
+width:900px;
+height:900px;
+background:radial-gradient(circle, rgba(255,215,0,.2), transparent 60%);
 filter:blur(70px);
 z-index:0;
 }
 
-/* Floating Particles */
 #particles{
 position:fixed;
 inset:0;
@@ -51,32 +42,21 @@ z-index:1;
 
 .particle{
 position:absolute;
-width:3px;
-height:3px;
+width:2px;
+height:2px;
 background:white;
+opacity:.4;
 border-radius:50%;
-opacity:.5;
 animation:float linear infinite;
 }
 
 @keyframes float{
-from{
-transform:translateY(110vh);
-opacity:0;
-}
-10%{
-opacity:1;
-}
-90%{
-opacity:1;
-}
-to{
-transform:translateY(-10vh);
-opacity:0;
-}
+from{transform:translateY(110vh);opacity:0;}
+10%{opacity:1;}
+90%{opacity:1;}
+to{transform:translateY(-10vh);opacity:0;}
 }
 
-/* Main Content */
 .container{
 position:relative;
 z-index:2;
@@ -86,214 +66,145 @@ padding:40px;
 
 .logo{
 width:200px;
-margin-bottom:30px;
-
-filter:
-drop-shadow(0 0 12px rgba(255,255,255,.8))
-drop-shadow(0 0 28px rgba(255,215,0,.7));
-
-animation:pulse 4s infinite;
-}
-
-@keyframes pulse{
-0%,100%{
-transform:scale(1);
-}
-50%{
-transform:scale(1.03);
-}
-}
-
-h1{
-font-size:2.3rem;
-margin-bottom:15px;
-}
-
-.tagline{
-font-size:1.05rem;
-opacity:.8;
-line-height:1.7;
-margin-bottom:35px;
-}
-
-.divider{
-width:220px;
-height:1px;
-background:rgba(255,255,255,.2);
-margin:0 auto 35px auto;
+margin-bottom:25px;
+filter:drop-shadow(0 0 20px rgba(255,215,0,.5));
 }
 
 .label{
+letter-spacing:4px;
 font-size:.8rem;
-letter-spacing:3px;
 opacity:.6;
-margin-bottom:12px;
+margin-bottom:15px;
 }
 
 .nowPlaying{
-font-size:1.4rem;
+font-size:1.8rem;
 font-weight:bold;
-margin-bottom:40px;
+margin-bottom:15px;
 }
 
-.status{
-font-size:1rem;
-opacity:.85;
-margin-bottom:15px;
+.sub{
+opacity:.7;
+margin-bottom:30px;
 }
 
 .countdown{
 font-size:2rem;
-font-weight:bold;
 color:gold;
-margin-bottom:30px;
+margin-bottom:25px;
 }
 
-.enterBtn{
-padding:10px 24px;
+.btn{
+padding:12px 26px;
 border:none;
 border-radius:999px;
-background:rgba(255,255,255,.9);
-color:black;
-font-size:.9rem;
-font-weight:bold;
 cursor:pointer;
-transition:.25s;
+font-weight:bold;
+background:white;
+color:black;
+transition:.2s;
 }
 
-.enterBtn:hover{
-transform:scale(1.04);
-}
+.btn:hover{transform:scale(1.05);}
 
 .footer{
 margin-top:25px;
 font-size:.75rem;
-opacity:.5;
+opacity:.4;
+letter-spacing:2px;
+}
+
+/* FADE OVERLAY */
+.fadeOverlay{
+position:fixed;
+inset:0;
+background:black;
+opacity:0;
+pointer-events:none;
+z-index:999;
+transition:opacity 1.2s ease;
+}
+.fadeOverlay.active{
+opacity:1;
 }
 
 </style>
 </head>
 
 <body>
+<div class="fadeOverlay" id="fadeOverlay"></div>
 
-```html
-<div class="label">NOW PLAYING</div>
+<div class="glow"></div>
+<div id="particles"></div>
 
-<div class="nowPlaying" id="nowPlaying">
-Loading Broadcast...
+<div class="container">
+<img src="assets/logo.png" class="logo">
+
+<div class="label">NOW BROADCASTING</div>
+
+<div class="nowPlaying" id="nowPlaying">Loading...</div>
+
+<div class="sub">Entering KathReid TV experience</div>
+
+<div class="countdown" id="countdown">10</div>
+
+<button class="btn" onclick="enter()">ENTER CHANNEL</button>
+
+<div class="footer">KATHREID TV • 24/7 STREAM</div>
 </div>
-
-<div class="status" id="statusText">
-Connecting to KathReid TV...
-</div>
-
-<div class="countdown" id="countdown">
-10
-</div>
-
-<button class="enterBtn" onclick="enterChannel()">
-Enter Channel
-</button>
 
 <script>
 
-const CHANNEL_URL =
-"https://krcwofc.github.io/kathreid-tv/";
+const url = "https://krcwofc.github.io/kathreid-tv/";
 
-let delay = 10;
+const overlay = document.getElementById("fadeOverlay");
 
-if(localStorage.getItem("krtv_returning")){
-    delay = 3;
-}else{
-    localStorage.setItem("krtv_returning","yes");
+function enter(){
+overlay.classList.add("active");
+setTimeout(()=>{
+window.location.href = url;
+}, 1200);
 }
 
-async function loadState(){
-
-    try{
-
-        const res = await fetch(
-            "./data/state.json?t=" + Date.now()
-        );
-
-        const state = await res.json();
-
-        document.getElementById("nowPlaying")
-            .textContent =
-            state.slot?.label ||
-            "KathReid TV Live Feed";
-
-    }catch{
-
-        document.getElementById("nowPlaying")
-            .textContent =
-            "KathReid TV Live Feed";
-
-    }
-
+async function load(){
+try{
+const res = await fetch("./data/state.json?t=" + Date.now());
+const data = await res.json();
+document.getElementById("nowPlaying").textContent =
+data.slot?.label || "Live Broadcast";
+}catch(e){
+document.getElementById("nowPlaying").textContent = "Live Broadcast";
+}
 }
 
-function enterChannel(){
+load();
 
-    window.location.href =
-    CHANNEL_URL;
-
-}
-
-loadState();
-
-const countdown =
-document.getElementById("countdown");
-
-const status =
-document.getElementById("statusText");
-
-const messages = [
-"Connecting to KathReid TV...",
-"Loading Channel Feed...",
-"Synchronizing Broadcast...",
-"Channel Ready"
-];
-
-let messageIndex = 0;
-
-const statusTimer = setInterval(()=>{
-
-    messageIndex++;
-
-    if(messageIndex < messages.length){
-
-        status.textContent =
-        messages[messageIndex];
-
-    }
-
-},2500);
-
-let remaining = delay;
-
-countdown.textContent = remaining;
+/* countdown */
+let t = 10;
+const cd = document.getElementById("countdown");
 
 const timer = setInterval(()=>{
-
-    remaining--;
-
-    countdown.textContent = remaining;
-
-    if(remaining <= 0){
-
-        clearInterval(timer);
-        clearInterval(statusTimer);
-
-        enterChannel();
-
-    }
-
+t--;
+cd.textContent = t;
+if(t <= 0){
+clearInterval(timer);
+enter();
+}
 },1000);
+
+/* particles */
+const pWrap = document.getElementById("particles");
+
+for(let i=0;i<60;i++){
+const p = document.createElement("div");
+p.className = "particle";
+p.style.left = Math.random()*100 + "vw";
+p.style.animationDuration = (8+Math.random()*10) + "s";
+p.style.animationDelay = Math.random()*5 + "s";
+pWrap.appendChild(p);
+}
 
 </script>
 
-
 </body>
 </html>
-
