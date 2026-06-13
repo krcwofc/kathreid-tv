@@ -87,7 +87,8 @@ text-shadow:0 0 25px rgba(255,215,0,.25);
 
 .logo{
 width:200px;
-margin-bottom:25px;
+margin:0 auto 25px auto;
+display:block;
 filter:drop-shadow(0 0 20px rgba(255,215,0,.5));
 }
 
@@ -265,8 +266,7 @@ load();
 /* countdown */
 const fill = document.getElementById("sliderFill");
 
-let duration = 8000; // 8 seconds
-const duration = 8000;
+const duration = 6000;
 const start = Date.now();
 
 function updateLoader(){
@@ -274,10 +274,8 @@ function updateLoader(){
 let elapsed = Date.now() - start;
 let progress = Math.min(elapsed / duration, 1);
 
-/* fill bar */
 fill.style.width = (progress * 100) + "%";
 
-/* finish */
 if(progress >= 1){
 enter();
 return;
