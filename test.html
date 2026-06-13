@@ -64,16 +64,20 @@ max-width:800px;
 padding:40px;
 }
 
-  .brand{
+.brand{
 font-size:3.2rem;
 letter-spacing:10px;
 font-weight:900;
 margin-bottom:10px;
-background:linear-gradient(90deg,gold,#fff,gold);
+position:relative;
+display:inline-block;
+color:transparent;
+background:linear-gradient(90deg,#b8860b,#fff,#ffd700,#fff,#b8860b);
+background-size:300% 100%;
 -webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+background-clip:text;
+animation:sheen 4s linear infinite;
 text-shadow:0 0 25px rgba(255,215,0,.25);
-animation:glowPulse 3s ease-in-out infinite;
 }
 
 @keyframes glowPulse{
@@ -163,9 +167,40 @@ box-shadow:0 0 10px rgba(255,215,0,.15);
 .sliderFill{
 height:100%;
 width:0%;
-background:linear-gradient(90deg,gold,#fff,gold);
+background:linear-gradient(90deg,#ffd700,#fff,#ffd700);
 border-radius:999px;
-transition:width 0.1s linear;
+position:relative;
+overflow:hidden;
+}
+
+  .sliderFill::after{
+content:"";
+position:absolute;
+top:0;
+left:-60%;
+width:60%;
+height:100%;
+background:linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.8),
+transparent
+);
+animation:shineMove 1.2s infinite;
+}
+
+@keyframes shineMove{
+0%{left:-60%;}
+100%{left:120%;}
+}
+
+  @keyframes sheen{
+0%{background-position:0% 50%;}
+100%{background-position:300% 50%;}
+}
+
+  .sliderFill{
+overflow:hidden;
 }
 
 </style>
@@ -231,8 +266,12 @@ load();
 const fill = document.getElementById("sliderFill");
 
 let duration = 8000; // 8 seconds
-let start = Date.now();
+let start;
 
+window.addEventListener("load", () => {
+start = Date.now();
+});
+  
 const slider = setInterval(() => {
 let elapsed = Date.now() - start;
 let progress = Math.min((elapsed / duration) * 100, 100);
