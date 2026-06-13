@@ -64,6 +64,23 @@ max-width:800px;
 padding:40px;
 }
 
+  .brand{
+font-size:3.2rem;
+letter-spacing:10px;
+font-weight:900;
+margin-bottom:10px;
+background:linear-gradient(90deg,gold,#fff,gold);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+text-shadow:0 0 25px rgba(255,215,0,.25);
+animation:glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse{
+0%,100%{filter:brightness(1);}
+50%{filter:brightness(1.3);}
+}
+
 .logo{
 width:200px;
 margin-bottom:25px;
@@ -138,19 +155,23 @@ opacity:1;
 <div id="particles"></div>
 
 <div class="container">
+
+<div class="brand">KATHREID TV</div>
+
 <img src="assets/logo.png" class="logo">
 
 <div class="label">NOW BROADCASTING</div>
 
 <div class="nowPlaying" id="nowPlaying">Loading...</div>
 
-<div class="sub">Entering KathReid TV experience</div>
+<div class="sub">Entering broadcast experience</div>
 
-<div class="countdown" id="countdown">10</div>
+<div class="countdown" id="countdown">8</div>
 
 <button class="btn" onclick="enter()">ENTER CHANNEL</button>
 
-<div class="footer">KATHREID TV • 24/7 STREAM</div>
+<div class="footer">24/7 STREAM • GLOBAL SIGNAL</div>
+
 </div>
 
 <script>
