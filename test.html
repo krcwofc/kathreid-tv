@@ -1,4 +1,4 @@
-```html
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -176,27 +176,11 @@ opacity:.5;
 
 <body>
 
-<div class="glow"></div>
-
-<div id="particles"></div>
-
-<div class="container">
-
-<img src="assets/logo.png" class="logo">
-
-<h1>KathReid TV</h1>
-
-<div class="tagline">
-A continuous celebration of<br>
-Kathryn Bernardo & James Reid
-</div>
-
-<div class="divider"></div>
-
+```html
 <div class="label">NOW PLAYING</div>
 
-<div class="nowPlaying">
-KathReid Primetime Feels
+<div class="nowPlaying" id="nowPlaying">
+Loading Broadcast...
 </div>
 
 <div class="status" id="statusText">
@@ -204,96 +188,112 @@ Connecting to KathReid TV...
 </div>
 
 <div class="countdown" id="countdown">
-5
+10
 </div>
 
 <button class="enterBtn" onclick="enterChannel()">
-Enter Now
+Enter Channel
 </button>
-
-<div class="footer">
-Streaming fan-curated KathReid moments 24/7
-</div>
-
-</div>
 
 <script>
 
-function enterChannel(){
-window.location.href =
+const CHANNEL_URL =
 "https://krcwofc.github.io/kathreid-tv/";
+
+let delay = 10;
+
+if(localStorage.getItem("krtv_returning")){
+    delay = 3;
+}else{
+    localStorage.setItem("krtv_returning","yes");
 }
 
-/* Countdown */
+async function loadState(){
 
-let seconds = 5;
+    try{
 
-const countdownEl =
+        const res = await fetch(
+            "./data/state.json?t=" + Date.now()
+        );
+
+        const state = await res.json();
+
+        document.getElementById("nowPlaying")
+            .textContent =
+            state.slot?.label ||
+            "KathReid TV Live Feed";
+
+    }catch{
+
+        document.getElementById("nowPlaying")
+            .textContent =
+            "KathReid TV Live Feed";
+
+    }
+
+}
+
+function enterChannel(){
+
+    window.location.href =
+    CHANNEL_URL;
+
+}
+
+loadState();
+
+const countdown =
 document.getElementById("countdown");
 
-const statusEl =
+const status =
 document.getElementById("statusText");
 
 const messages = [
 "Connecting to KathReid TV...",
 "Loading Channel Feed...",
-"Preparing Broadcast...",
+"Synchronizing Broadcast...",
 "Channel Ready"
 ];
 
-let msg = 0;
+let messageIndex = 0;
 
 const statusTimer = setInterval(()=>{
-msg++;
-if(msg < messages.length){
-statusEl.innerText = messages[msg];
-}
-},1200);
+
+    messageIndex++;
+
+    if(messageIndex < messages.length){
+
+        status.textContent =
+        messages[messageIndex];
+
+    }
+
+},2500);
+
+let remaining = delay;
+
+countdown.textContent = remaining;
 
 const timer = setInterval(()=>{
 
-seconds--;
+    remaining--;
 
-countdownEl.innerText = seconds;
+    countdown.textContent = remaining;
 
-if(seconds <= 0){
+    if(remaining <= 0){
 
-clearInterval(timer);
-clearInterval(statusTimer);
+        clearInterval(timer);
+        clearInterval(statusTimer);
 
-enterChannel();
+        enterChannel();
 
-}
+    }
 
 },1000);
 
-/* Particles */
-
-const particles =
-document.getElementById("particles");
-
-for(let i=0;i<80;i++){
-
-const p =
-document.createElement("div");
-
-p.className = "particle";
-
-p.style.left =
-Math.random()*100 + "vw";
-
-p.style.animationDuration =
-(10 + Math.random()*15) + "s";
-
-p.style.animationDelay =
-Math.random()*10 + "s";
-
-particles.appendChild(p);
-
-}
-
 </script>
+
 
 </body>
 </html>
-```
+
