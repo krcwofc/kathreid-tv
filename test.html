@@ -99,7 +99,7 @@ body{
 }
 
 /* =======================
-   LOGO (CORE FIX)
+   LOGO BASE (SMOOTH PULSE)
 ======================= */
 .logo{
   width:200px;
@@ -110,10 +110,8 @@ body{
   transform-origin:center;
   will-change:transform, filter;
 
-  /* smooth breathing */
   animation:logoPulse 3.2s ease-in-out infinite;
 
-  /* smooth state blending */
   transition:
     transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
     filter 900ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -122,7 +120,7 @@ body{
   filter:drop-shadow(0 0 14px rgba(255,215,0,.22));
 }
 
-/* gentle “alive” pulse */
+/* soft breathing pulse */
 @keyframes logoPulse{
   0%,100%{
     transform:scale(1);
@@ -136,37 +134,55 @@ body{
 }
 
 /* =======================
-   LOCK STATE (SMOOTH MOMENT)
-   - no harsh jump
-   - uses easing + layered glow
+   LOCK STATE (FINAL + STABLE)
 ======================= */
 .logo.locked{
-  animation:lockBreath 1.6s ease-in-out infinite;
+  animation:none;
 
   transform:scale(1.05);
+  opacity:1;
 
   filter:
-    drop-shadow(0 0 22px rgba(255,215,0,.45))
-    drop-shadow(0 0 45px rgba(255,215,0,.25))
-    drop-shadow(0 0 70px rgba(255,255,255,.15));
+    drop-shadow(0 0 30px rgba(255,215,0,.55))
+    drop-shadow(0 0 65px rgba(255,215,0,.25))
+    drop-shadow(0 0 95px rgba(255,255,255,.10));
 
-  opacity:1;
+  transition:
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* after lock: subtle continued breathing (important for smoothness) */
-@keyframes lockBreath{
-  0%,100%{
-    transform:scale(1.045);
-    filter:
-      drop-shadow(0 0 25px rgba(255,215,0,.45))
-      drop-shadow(0 0 55px rgba(255,255,255,.15));
+/* subtle one-time “lock burst” */
+.logo.locked::after{
+  content:"";
+  position:absolute;
+  inset:-40px;
+  pointer-events:none;
+
+  background:radial-gradient(
+    circle,
+    rgba(255,215,0,.25),
+    transparent 60%
+  );
+
+  animation:lockBurst 1.2s ease-out forwards;
+}
+
+@keyframes lockBurst{
+  0%{
+    opacity:0;
+    transform:scale(0.85);
   }
 
-  50%{
-    transform:scale(1.06);
-    filter:
-      drop-shadow(0 0 35px rgba(255,215,0,.55))
-      drop-shadow(0 0 75px rgba(255,255,255,.20));
+  40%{
+    opacity:1;
+    transform:scale(1.05);
+  }
+
+  100%{
+    opacity:0;
+    transform:scale(1.25);
   }
 }
 
