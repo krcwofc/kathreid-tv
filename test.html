@@ -145,6 +145,29 @@ transition:opacity 1.2s ease;
 opacity:1;
 }
 
+  .sliderWrap{
+margin:25px auto;
+width:100%;
+max-width:320px;
+}
+
+.sliderTrack{
+width:100%;
+height:6px;
+background:rgba(255,255,255,.15);
+border-radius:999px;
+overflow:hidden;
+box-shadow:0 0 10px rgba(255,215,0,.15);
+}
+
+.sliderFill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,gold,#fff,gold);
+border-radius:999px;
+transition:width 0.1s linear;
+}
+
 </style>
 </head>
 
@@ -166,8 +189,12 @@ opacity:1;
 
 <div class="sub">Entering broadcast experience</div>
 
-<div class="countdown" id="countdown">8</div>
-
+<div class="sliderWrap">
+  <div class="sliderTrack">
+    <div class="sliderFill" id="sliderFill"></div>
+  </div>
+</div>
+  
 <button class="btn" onclick="enter()">ENTER CHANNEL</button>
 
 <div class="footer">24/7 STREAM • GLOBAL SIGNAL</div>
