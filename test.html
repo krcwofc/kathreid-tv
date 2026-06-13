@@ -24,6 +24,9 @@ align-items:center;
 text-align:center;
 }
 
+/* =======================
+   BACKGROUND GLOW
+======================= */
 .glow{
 position:fixed;
 width:900px;
@@ -33,6 +36,9 @@ filter:blur(70px);
 z-index:0;
 }
 
+/* =======================
+   PARTICLES
+======================= */
 #particles{
 position:fixed;
 inset:0;
@@ -57,6 +63,9 @@ from{transform:translateY(110vh);opacity:0;}
 to{transform:translateY(-10vh);opacity:0;}
 }
 
+/* =======================
+   LAYOUT
+======================= */
 .container{
 position:relative;
 z-index:2;
@@ -64,65 +73,90 @@ max-width:800px;
 padding:40px;
 }
 
+/* =======================
+   BRAND TEXT
+======================= */
 .brand{
 font-size:3.2rem;
 letter-spacing:10px;
 font-weight:900;
 margin-bottom:10px;
-position:relative;
 display:inline-block;
+
 color:transparent;
 background:linear-gradient(90deg,#b8860b,#fff,#ffd700,#fff,#b8860b);
 background-size:300% 100%;
 -webkit-background-clip:text;
 background-clip:text;
+
 animation:sheen 4s linear infinite;
 text-shadow:0 0 25px rgba(255,215,0,.25);
 }
 
-@keyframes glowPulse{
-0%,100%{filter:brightness(1);}
-50%{filter:brightness(1.3);}
+@keyframes sheen{
+0%{background-position:0% 50%;}
+100%{background-position:300% 50%;}
 }
 
+/* =======================
+   LOGO (BASE STATE)
+======================= */
 .logo{
 width:200px;
 margin:0 auto 25px auto;
 display:block;
-filter:drop-shadow(0 0 20px rgba(255,215,0,.5));
-}
 
-  .logo{
-transition:all 0.6s ease;
-transform:scale(1);
-opacity:0.95;
-}
-
-  .logo{
-animation:logoPulse 2.8s ease-in-out infinite;
 transform-origin:center;
+animation:logoPulse 2.8s ease-in-out infinite;
+
+transition:transform 0.6s ease, filter 0.6s ease;
+filter:drop-shadow(0 0 14px rgba(255,215,0,.25));
 }
 
+/* soft breathing pulse */
+@keyframes logoPulse{
+0%,100%{
+transform:scale(1);
+filter:drop-shadow(0 0 14px rgba(255,215,0,.22));
+}
+
+50%{
+transform:scale(1.02);
+filter:drop-shadow(0 0 24px rgba(255,215,0,.35));
+}
+}
+
+/* =======================
+   LOCKED STATE (80%+)
+======================= */
 .logo.locked{
-animation:lockGlow 1.2s ease-out forwards;
+animation:lockBurst 1.1s cubic-bezier(.2,.9,.2,1) forwards;
 }
 
-@keyframes lockGlow{
+@keyframes lockBurst{
 0%{
 transform:scale(1.02);
-filter:drop-shadow(0 0 25px rgba(255,215,0,.4));
-opacity:.95;
+filter:drop-shadow(0 0 20px rgba(255,215,0,.25));
+}
+
+40%{
+transform:scale(1.12);
+filter:
+drop-shadow(0 0 60px rgba(255,215,0,.85))
+drop-shadow(0 0 90px rgba(255,255,255,.45));
 }
 
 100%{
 transform:scale(1.06);
 filter:
-drop-shadow(0 0 35px rgba(255,215,0,.95))
-drop-shadow(0 0 60px rgba(255,255,255,.4));
-opacity:1;
+drop-shadow(0 0 35px rgba(255,215,0,.75))
+drop-shadow(0 0 55px rgba(255,255,255,.35));
 }
 }
 
+/* =======================
+   TEXT ELEMENTS
+======================= */
 .label{
 letter-spacing:4px;
 font-size:.8rem;
@@ -141,12 +175,16 @@ opacity:.7;
 margin-bottom:30px;
 }
 
-.countdown{
-font-size:2rem;
-color:gold;
-margin-bottom:25px;
+.footer{
+margin-top:25px;
+font-size:.75rem;
+opacity:.4;
+letter-spacing:2px;
 }
 
+/* =======================
+   BUTTON
+======================= */
 .btn{
 padding:12px 26px;
 border:none;
@@ -158,16 +196,13 @@ color:black;
 transition:.2s;
 }
 
-.btn:hover{transform:scale(1.05);}
-
-.footer{
-margin-top:25px;
-font-size:.75rem;
-opacity:.4;
-letter-spacing:2px;
+.btn:hover{
+transform:scale(1.05);
 }
 
-/* FADE OVERLAY */
+/* =======================
+   FADE OVERLAY
+======================= */
 .fadeOverlay{
 position:fixed;
 inset:0;
@@ -177,11 +212,15 @@ pointer-events:none;
 z-index:999;
 transition:opacity 1.2s ease;
 }
+
 .fadeOverlay.active{
 opacity:1;
 }
 
-  .sliderWrap{
+/* =======================
+   LOADER BAR
+======================= */
+.sliderWrap{
 margin:25px auto;
 width:100%;
 max-width:320px;
@@ -205,7 +244,7 @@ position:relative;
 overflow:hidden;
 }
 
-  .sliderFill::after{
+.sliderFill::after{
 content:"";
 position:absolute;
 top:0;
@@ -221,33 +260,10 @@ transparent
 animation:shineMove 1.2s infinite;
 }
 
-    .sliderFill{
-overflow:hidden;
-}
-
 @keyframes shineMove{
 0%{left:-60%;}
 100%{left:120%;}
 }
-
-  @keyframes sheen{
-0%{background-position:0% 50%;}
-100%{background-position:300% 50%;}
-}
-
- @keyframes logoPulse{
-0%,100%{
-transform:scale(1);
-filter:drop-shadow(0 0 14px rgba(255,215,0,.25));
-}
-
-50%{
-transform:scale(1.015);
-filter:drop-shadow(0 0 22px rgba(255,215,0,.35));
-}
-}
-
-
 </style>
 </head>
 
