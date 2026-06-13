@@ -104,12 +104,23 @@ transform-origin:center;
 }
 
 .logo.locked{
-animation:none;
+animation:lockGlow 1.2s ease-out forwards;
+}
+
+@keyframes lockGlow{
+0%{
+transform:scale(1.02);
+filter:drop-shadow(0 0 25px rgba(255,215,0,.4));
+opacity:.95;
+}
+
+100%{
 transform:scale(1.06);
 filter:
 drop-shadow(0 0 35px rgba(255,215,0,.95))
 drop-shadow(0 0 60px rgba(255,255,255,.4));
 opacity:1;
+}
 }
 
 .label{
@@ -224,15 +235,15 @@ overflow:hidden;
 100%{background-position:300% 50%;}
 }
 
-  @keyframes logoPulse{
+ @keyframes logoPulse{
 0%,100%{
 transform:scale(1);
-filter:drop-shadow(0 0 18px rgba(255,215,0,.35));
+filter:drop-shadow(0 0 14px rgba(255,215,0,.25));
 }
 
 50%{
-transform:scale(1.02);
-filter:drop-shadow(0 0 30px rgba(255,215,0,.55));
+transform:scale(1.015);
+filter:drop-shadow(0 0 22px rgba(255,215,0,.35));
 }
 }
 
