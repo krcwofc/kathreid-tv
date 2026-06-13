@@ -266,23 +266,27 @@ load();
 const fill = document.getElementById("sliderFill");
 
 let duration = 8000; // 8 seconds
-let start;
+const duration = 8000;
+const start = Date.now();
 
-window.addEventListener("load", () => {
-start = Date.now();
-});
-  
-const slider = setInterval(() => {
+function updateLoader(){
+
 let elapsed = Date.now() - start;
-let progress = Math.min((elapsed / duration) * 100, 100);
+let progress = Math.min(elapsed / duration, 1);
 
-fill.style.width = progress + "%";
+/* fill bar */
+fill.style.width = (progress * 100) + "%";
 
-if (progress >= 100) {
-clearInterval(slider);
+/* finish */
+if(progress >= 1){
 enter();
+return;
 }
-}, 16); // smooth ~60fps
+
+requestAnimationFrame(updateLoader);
+}
+
+updateLoader();
 
 /* particles */
 const pWrap = document.getElementById("particles");
