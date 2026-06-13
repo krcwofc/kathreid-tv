@@ -1,0 +1,299 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KathReid TV</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#000;
+color:white;
+font-family:Arial,sans-serif;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+/* Background Glow */
+.glow{
+position:fixed;
+width:1000px;
+height:1000px;
+background:
+radial-gradient(circle,
+rgba(255,215,0,.25) 0%,
+rgba(255,215,0,.08) 35%,
+transparent 70%);
+filter:blur(70px);
+z-index:0;
+}
+
+/* Floating Particles */
+#particles{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:1;
+}
+
+.particle{
+position:absolute;
+width:3px;
+height:3px;
+background:white;
+border-radius:50%;
+opacity:.5;
+animation:float linear infinite;
+}
+
+@keyframes float{
+from{
+transform:translateY(110vh);
+opacity:0;
+}
+10%{
+opacity:1;
+}
+90%{
+opacity:1;
+}
+to{
+transform:translateY(-10vh);
+opacity:0;
+}
+}
+
+/* Main Content */
+.container{
+position:relative;
+z-index:2;
+max-width:800px;
+padding:40px;
+}
+
+.logo{
+width:200px;
+margin-bottom:30px;
+
+filter:
+drop-shadow(0 0 12px rgba(255,255,255,.8))
+drop-shadow(0 0 28px rgba(255,215,0,.7));
+
+animation:pulse 4s infinite;
+}
+
+@keyframes pulse{
+0%,100%{
+transform:scale(1);
+}
+50%{
+transform:scale(1.03);
+}
+}
+
+h1{
+font-size:2.3rem;
+margin-bottom:15px;
+}
+
+.tagline{
+font-size:1.05rem;
+opacity:.8;
+line-height:1.7;
+margin-bottom:35px;
+}
+
+.divider{
+width:220px;
+height:1px;
+background:rgba(255,255,255,.2);
+margin:0 auto 35px auto;
+}
+
+.label{
+font-size:.8rem;
+letter-spacing:3px;
+opacity:.6;
+margin-bottom:12px;
+}
+
+.nowPlaying{
+font-size:1.4rem;
+font-weight:bold;
+margin-bottom:40px;
+}
+
+.status{
+font-size:1rem;
+opacity:.85;
+margin-bottom:15px;
+}
+
+.countdown{
+font-size:2rem;
+font-weight:bold;
+color:gold;
+margin-bottom:30px;
+}
+
+.enterBtn{
+padding:10px 24px;
+border:none;
+border-radius:999px;
+background:rgba(255,255,255,.9);
+color:black;
+font-size:.9rem;
+font-weight:bold;
+cursor:pointer;
+transition:.25s;
+}
+
+.enterBtn:hover{
+transform:scale(1.04);
+}
+
+.footer{
+margin-top:25px;
+font-size:.75rem;
+opacity:.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="glow"></div>
+
+<div id="particles"></div>
+
+<div class="container">
+
+<img src="assets/logo.png" class="logo">
+
+<h1>KathReid TV</h1>
+
+<div class="tagline">
+A continuous celebration of<br>
+Kathryn Bernardo & James Reid
+</div>
+
+<div class="divider"></div>
+
+<div class="label">NOW PLAYING</div>
+
+<div class="nowPlaying">
+KathReid Primetime Feels
+</div>
+
+<div class="status" id="statusText">
+Connecting to KathReid TV...
+</div>
+
+<div class="countdown" id="countdown">
+5
+</div>
+
+<button class="enterBtn" onclick="enterChannel()">
+Enter Now
+</button>
+
+<div class="footer">
+Streaming fan-curated KathReid moments 24/7
+</div>
+
+</div>
+
+<script>
+
+function enterChannel(){
+window.location.href =
+"https://krcwofc.github.io/kathreid-tv/";
+}
+
+/* Countdown */
+
+let seconds = 5;
+
+const countdownEl =
+document.getElementById("countdown");
+
+const statusEl =
+document.getElementById("statusText");
+
+const messages = [
+"Connecting to KathReid TV...",
+"Loading Channel Feed...",
+"Preparing Broadcast...",
+"Channel Ready"
+];
+
+let msg = 0;
+
+const statusTimer = setInterval(()=>{
+msg++;
+if(msg < messages.length){
+statusEl.innerText = messages[msg];
+}
+},1200);
+
+const timer = setInterval(()=>{
+
+seconds--;
+
+countdownEl.innerText = seconds;
+
+if(seconds <= 0){
+
+clearInterval(timer);
+clearInterval(statusTimer);
+
+enterChannel();
+
+}
+
+},1000);
+
+/* Particles */
+
+const particles =
+document.getElementById("particles");
+
+for(let i=0;i<80;i++){
+
+const p =
+document.createElement("div");
+
+p.className = "particle";
+
+p.style.left =
+Math.random()*100 + "vw";
+
+p.style.animationDuration =
+(10 + Math.random()*15) + "s";
+
+p.style.animationDelay =
+Math.random()*10 + "s";
+
+particles.appendChild(p);
+
+}
+
+</script>
+
+</body>
+</html>
+```
