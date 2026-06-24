@@ -1,19 +1,14 @@
 {
   "slot": {
-    "start": 120,
-    "end": 240,
-    "label": "2–4 AM Chill with KathReid Music 🎶",
+    "start": 240,
+    "end": 360,
+    "label": "4–6 AM KathReid Late Night Kilig",
     "videos": [
-      "rZaaucc3bnM",
-      "sEl9EBRtDsU",
-      "tkiYA7IAJJU",
-      "kK_IxSOOdBk",
-      "GQo2FerStNA",
-      "1foFFymuEaU",
-      "kJJ4yr-O6wI"
+      "PSz0TDDhMp4",
+      "WPoWmkCC86I"
     ]
   },
   "blockChange": true,
-  "announcement": "🌙 LATE NIGHT • 2–4 AM Chill with KathReid Music 🎶",
-  "timestamp": 1782330914001
+  "announcement": "🌙 LATE NIGHT • 4–6 AM KathReid Late Night Kilig",
+  "timestamp": 1782331223246
 }
