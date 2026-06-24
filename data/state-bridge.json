@@ -1,107 +1,57 @@
 {
   "slot": {
-    "start": 960,
-    "end": 1080,
-    "label": "4–6 PM James' TV & Movies 🎬",
+    "start": 1080,
+    "end": 1200,
+    "label": "6–8 PM KathReid Primetime Feels 💞",
     "videos": [
-      {
-        "id": "Mes4k3QQtCo",
-        "type": "movie",
-        "title": "Miss Granny"
-      },
-      {
-        "id": "3_BtFPbABl4",
-        "type": "movie",
-        "title": "Diary Ng Panget"
-      },
-      {
-        "id": "eMwM5WKjg0A",
-        "type": "movie",
-        "title": "Para sa Hopeless Romantic"
-      },
-      {
-        "id": "rbXwmiE7ccg",
-        "type": "movie",
-        "title": "Never Not Love You"
-      },
-      {
-        "id": "ltQQ04N4bl0",
-        "type": "movie",
-        "title": "Talk Back and You’re Dead"
-      },
-      {
-        "id": "9Oa53aUeqbA",
-        "type": "movie",
-        "title": "Beauty and The Bestie"
-      },
-      {
-        "id": "C--pLKAkGE0",
-        "type": "movie",
-        "title": "Maalaala Mo Kaya - Stuffed Toy"
-      },
-      {
-        "id": "PrL2XF1KEkg",
-        "type": "filler"
-      },
-      {
-        "id": "8IigCoSwrlg",
-        "type": "filler"
-      },
-      {
-        "id": "c1JS34NhFWw",
-        "type": "filler"
-      },
-      {
-        "id": "m3YZ2tA4Xn8",
-        "type": "filler"
-      },
-      {
-        "id": "tuBij65fsVU",
-        "type": "filler"
-      },
-      {
-        "id": "SHTQmSG8nQc",
-        "type": "filler"
-      },
-      {
-        "id": "pd8q_5vg--0",
-        "type": "filler"
-      },
-      {
-        "id": "FEyXacG0rdE",
-        "type": "filler"
-      },
-      {
-        "id": "Sc5IBX6V1qM",
-        "type": "filler"
-      },
-      {
-        "id": "aplqs0XogAA",
-        "type": "filler"
-      },
-      {
-        "id": "JX-FV435kzo",
-        "type": "filler"
-      },
-      {
-        "id": "Sc5IBX6V1qM",
-        "type": "filler"
-      },
-      {
-        "id": "LpcloGtge2A",
-        "type": "filler"
-      },
-      {
-        "id": "qLOqnlBoBiI",
-        "type": "filler"
-      },
-      {
-        "id": "7uxXFXuFztE",
-        "type": "filler"
-      }
+      "t-v8rWA5Kuw",
+      "kcBM-5bNivg",
+      "l--29V5x1ic",
+      "t6H3bOwKQu8",
+      "aQEiv-Sxmh0",
+      "tkiYA7IAJJU",
+      "NflBucZ0mFE",
+      "Un7CfZ9kBw",
+      "aq2un4RPC-w",
+      "suR-3naRIvY",
+      "aa558D604U8",
+      "4k2RN5bMJj4",
+      "YSb2n916h1Q",
+      "nUKtUcWX10k",
+      "0M6YyoNg85A",
+      "qhuiAOfNoBw",
+      "iWFCQgnEqo",
+      "Li_XF3oJRrw",
+      "0eSfNhvuJ4E",
+      "q3yO5MnhiUk",
+      "s2GoXAjDXnE",
+      "biSPsXnd-Ww",
+      "qOnzNXe4jk8",
+      "t34qXgPqSuU",
+      "sN-xpoz9qCU",
+      "ZE7alShzcA8",
+      "KRpD_C8q2Qc",
+      "EoRG75MKteg",
+      "fl_cZMHKfOc",
+      "6-aoGYPdQxY",
+      "Hf7xAJs9PF8",
+      "f3Qo1ZY4Z2Q",
+      "fxxQdkHJLOE",
+      "pNzjf3FNEyQ",
+      "mW_NNLSwCWU",
+      "ssWXBtR_pZc",
+      "d2VilgAbDzg",
+      "RrSjQq9QNVI",
+      "MzAcIYPi9bc",
+      "H2mBilUI0N4",
+      "BHCTW3a6mWM",
+      "vywcDyRiAVY",
+      "RuIQdibXkLU",
+      "60g8jrIuwog",
+      "WPoWmkCC86I"
     ]
   },
   "blockChange": true,
-  "announcement": "☀️ AFTERNOON • 4–6 PM James' TV & Movies 🎬",
-  "timestamp": 1782294915439
+  "announcement": "🌆 EVENING • 6–8 PM KathReid Primetime Feels 💞",
+  "timestamp": 1782295224874
 }
