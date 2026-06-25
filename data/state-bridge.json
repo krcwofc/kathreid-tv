@@ -1,49 +1,115 @@
 {
   "slot": {
-    "start": 360,
-    "end": 480,
-    "label": "6–8 AM Jam with James Reid 🎶",
+    "start": 480,
+    "end": 600,
+    "label": "8–10 AM Kathryn's Blockbuster Movies & Highlights 🎬",
     "videos": [
-      "yMb6dyT0DIw",
-      "6cI4RBSeYYw",
-      "TsOfiwrj0Fg",
-      "QS4bx41IC60",
-      "QZhG3HCEUiI",
-      "5ZZB9Gs8tQU",
-      "HdI1_v5-690",
-      "GTvnk0yAXD8",
-      "MSHszha1nKI",
-      "5ZZB9Gs8tQU",
-      "Ai-yiy-m2gA",
-      "GMYvUEly2vA",
-      "XgyfXc3Y364",
-      "l32MpMIJceY",
-      "fORmM5og6YQ",
-      "EAVD5iUmZac",
-      "tUvcu40_jtQ",
-      "Naog28PnMuM",
-      "ZGSIuCy3W6g",
-      "gzTvLwuWjlI",
-      "annJeLv4E6s",
-      "VZ_cFm_Djzc",
-      "_TPAAguz3MY",
-      "0U3btMJ5H-8",
-      "NZHbE1JtLwE",
-      "rpHLdGKj_3o",
-      "edOxMRDwQc0",
-      "3jR0U36AXJI",
-      "0eRoepVSLp4",
-      "iF-DK5lanP4",
-      "YcKa2B5ek5k",
-      "TaF0EqnXoi0",
-      "NQfAZLohTcM",
-      "e_J95mQDC7U",
-      "xRdNr37nI7c",
-      "JHi6qNRk2jg",
-      "vn0XjIZTfOE"
+      {
+        "id": "CVYsmIbPBVM",
+        "type": "movie",
+        "title": "Three Words to Forever"
+      },
+      {
+        "id": "SureiNbQdtQ",
+        "type": "filler"
+      },
+      {
+        "id": "972BAlRFDB8",
+        "type": "filler"
+      },
+      {
+        "id": "mhE3EfdYJrA",
+        "type": "filler"
+      },
+      {
+        "id": "BvMJ0fNzIok",
+        "type": "movie",
+        "title": "Hello, Love, Goodbye"
+      },
+      {
+        "id": "HQKyVnYZ3Lg",
+        "type": "movie",
+        "title": "Must Be... Love"
+      },
+      {
+        "id": "kA9rZp3V0CY",
+        "type": "filler"
+      },
+      {
+        "id": "rVuTRl0sWi4",
+        "type": "filler"
+      },
+      {
+        "id": "CgCCOefMiv8",
+        "type": "filler"
+      },
+      {
+        "id": "VuwmlwcqTlI",
+        "type": "movie",
+        "title": "Way Back Home"
+      },
+      {
+        "id": "-e4RMfj3yZk",
+        "type": "movie",
+        "title": "Crazy Beautiful You"
+      },
+      {
+        "id": "n2gvYhq9XCU",
+        "type": "movie",
+        "title": "Barcelona: A Love Untold"
+      },
+      {
+        "id": "WqA6UQnsTtc",
+        "type": "movie",
+        "title": "Can’t Help Falling in Love"
+      },
+      {
+        "id": "myyoRDut8bo",
+        "type": "movie",
+        "title": "She’s Dating the Gangster"
+      },
+      {
+        "id": "3Aa32c2sRaI",
+        "type": "movie",
+        "title": "Pagpag: Siyam na Buhay"
+      },
+      {
+        "id": "N8o165D58Z4",
+        "type": "filler"
+      },
+      {
+        "id": "wkHta42fchc",
+        "type": "movie",
+        "title": "Sisterakas"
+      },
+      {
+        "id": "Y5URnyD70nM",
+        "type": "filler"
+      },
+      {
+        "id": "3bJtUayKX7g",
+        "type": "filler"
+      },
+      {
+        "id": "ksw1MZTYEt0",
+        "type": "filler"
+      },
+      {
+        "id": "t12BASGC5FU",
+        "type": "movie",
+        "title": "24/7 in Love"
+      },
+      {
+        "id": "h1j-ZcUb_Qo",
+        "type": "filler"
+      },
+      {
+        "id": "VDL7_R_5UH8",
+        "type": "filler"
+      }
     ]
   },
   "blockChange": true,
-  "announcement": "🌅 MORNING • 6–8 AM Jam with James Reid 🎶",
-  "timestamp": 1782345311858
+  "announcement": "🌅 MORNING • 8–10 AM Kathryn's Blockbuster Movies & Highlights 🎬",
+  "timestamp": 1782345621411
 }
